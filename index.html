@@ -29,18 +29,14 @@ h1 {
   padding-bottom: 10px;
 }
 
-.field-group {
-  margin-bottom: 18px;
-}
+.field-group { margin-bottom: 18px; }
 
 .field-row {
   display: flex;
   gap: 15px;
 }
 
-.field-row > div {
-  flex: 1;
-}
+.field-row > div { flex: 1; }
 
 label {
   display: block;
@@ -49,8 +45,7 @@ label {
   margin-bottom: 5px;
 }
 
-input,
-textarea {
+input {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
@@ -59,17 +54,10 @@ textarea {
   text-transform: uppercase;
 }
 
-textarea {
-  resize: vertical;
-}
-
 .options label {
   font-weight: normal;
+  display: block;
   margin-bottom: 6px;
-}
-
-.options input {
-  margin-right: 6px;
 }
 
 button {
@@ -82,49 +70,47 @@ button {
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
-  text-transform: uppercase;
 }
 
-button:hover {
-  background: #004080;
-}
+.hidden { display: none; }
 
 @media (max-width: 700px) {
-  .field-row {
-    flex-direction: column;
-  }
+  .field-row { flex-direction: column; }
 }
 </style>
 </head>
 
 <body>
-
 <div class="wrapper">
 
 <form
-  action="https://formsubmit.co/rh@grupobrasilforte.com.br,operacoes.gbf@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br"
-  method="POST"
-  enctype="multipart/form-data">
+ action="https://formsubmit.co/rh@grupobrasilforte.com.br,operacoes.gbf@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br"
+ method="POST"
+ enctype="multipart/form-data">
 
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
-<!-- PROTOCOLO -->
 <div class="field-group">
   <label>Nº DO PROTOCOLO</label>
-  <input type="text" name="PROTOCOLO" id="protocolo" readonly>
+  <input type="text" id="protocolo" name="PROTOCOLO" readonly>
 </div>
 
 <div class="field-row field-group">
   <div>
     <label>DATA DA ABERTURA</label>
-    <input type="date" name="DATA DA ABERTURA" id="dataAbertura" required>
+    <input type="date" id="dataAbertura" name="DATA DA ABERTURA" required>
   </div>
+  <div>
+    <label>DATA DE PREVISÃO DE INÍCIO</label>
+    <input type="date" id="dataPrevisao" name="DATA PREVISAO INICIO" required>
+  </div>
+</div>
 
+<div class="field-row field-group">
   <div>
     <label>SOLICITANTE</label>
     <input type="text" name="SOLICITANTE" required>
   </div>
-
   <div>
     <label>CARGO</label>
     <input type="text" name="CARGO" required>
@@ -137,11 +123,6 @@ button:hover {
 </div>
 
 <div class="field-group">
-  <label>FUNÇÕES EXERCIDAS</label>
-  <textarea name="FUNÇÕES EXERCIDAS" rows="3" required></textarea>
-</div>
-
-<div class="field-group">
   <label>QUANTIDADE DE VAGAS</label>
   <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
 </div>
@@ -149,12 +130,40 @@ button:hover {
 <div class="field-group">
   <label>TIPO DE CONTRATAÇÃO</label>
   <div class="options">
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="EFETIVA" required> EFETIVA</label>
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="AUMENTO DE EFETIVO"> AUMENTO DE EFETIVO</label>
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="SUBSTITUIÇÃO"> SUBSTITUIÇÃO</label>
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="COBERTURA DE FÉRIAS"> COBERTURA DE FÉRIAS</label>
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="LICENÇA MÉDICA"> LICENÇA MÉDICA</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="AUMENTO DE EFETIVO" required> AUMENTO DE EFETIVO</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="COBERTURA DE FERIAS"> COBERTURA DE FÉRIAS</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="EFETIVA"> EFETIVA</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="INTERMITENTE"> INTERMITENTE</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="LICENCA MEDICA"> LICENÇA MÉDICA</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="SUBSTITUICAO"> SUBSTITUIÇÃO</label>
   </div>
+</div>
+
+<!-- SUBNÍVEL -->
+<div id="subnivel" class="hidden">
+
+  <div class="field-row field-group">
+    <div>
+      <label>NOME DO COLABORADOR SUBSTITUÍDO</label>
+      <input type="text" id="nomeSub" name="NOME COLABORADOR SUBSTITUIDO">
+    </div>
+    <div>
+      <label>MATRÍCULA DO COLABORADOR SUBSTITUÍDO</label>
+      <input type="text" id="matSub" name="MATRICULA COLABORADOR SUBSTITUIDO">
+    </div>
+  </div>
+
+  <div id="feriasDatas" class="field-row field-group hidden">
+    <div>
+      <label>DATA INÍCIO COBERTURA</label>
+      <input type="date" id="iniFerias" name="DATA INICIO COBERTURA">
+    </div>
+    <div>
+      <label>DATA FINAL COBERTURA</label>
+      <input type="date" id="fimFerias" name="DATA FINAL COBERTURA">
+    </div>
+  </div>
+
 </div>
 
 <div class="field-row field-group">
@@ -162,31 +171,29 @@ button:hover {
     <label>ESCALA</label>
     <input type="text" name="ESCALA" required>
   </div>
-
   <div>
     <label>HORÁRIO</label>
-    <input type="text" name="HORÁRIO" required>
+    <input type="text" name="HORARIO" required>
   </div>
 </div>
 
 <div class="field-group">
   <label>EMPRESA</label>
   <div class="options">
-    <label><input type="radio" name="EMPRESA" value="BRASIL FORTE" required> BRASIL FORTE</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA MONITORAMENTO" required> AKVA MONITORAMENTO</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA PROTECAO (HEFESTOR)"> AKVA PROTEÇÃO (HEFESTOR)</label>
     <label><input type="radio" name="EMPRESA" value="AKVA TECNOLOGIA"> AKVA TECNOLOGIA</label>
-    <label><input type="radio" name="EMPRESA" value="ATRIA SERVIÇOS"> ATRIA SERVIÇOS</label>
-    <label><input type="radio" name="EMPRESA" value="AKVA MONITORAMENTO"> AKVA MONITORAMENTO</label>
-    <label><input type="radio" name="EMPRESA" value="AKVA PROTEÇÃO"> AKVA PROTEÇÃO</label>
+    <label><input type="radio" name="EMPRESA" value="ATRIA SERVICOS"> ATRIA SERVIÇOS</label>
+    <label><input type="radio" name="EMPRESA" value="BRASIL FORTE"> BRASIL FORTE</label>
   </div>
 </div>
 
 <div class="field-group">
   <label>ANEXAR CURRÍCULOS (SE HOUVER)</label>
-  <input type="file" name="CURRÍCULOS">
+  <input type="file" name="CURRICULOS">
 </div>
 
-<!-- CONFIGURAÇÕES -->
-<input type="hidden" name="_subject" value="ABERTURA DE VAGA - RH">
+<input type="hidden" name="_subject" id="assuntoEmail">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
 
@@ -196,28 +203,56 @@ button:hover {
 </div>
 
 <script>
-(function gerarDadosAutomaticos() {
-  const agora = new Date();
-  const ano = agora.getFullYear();
-  const mes = String(agora.getMonth() + 1).padStart(2, '0');
-  const dia = String(agora.getDate()).padStart(2, '0');
-  const hora = String(agora.getHours()).padStart(2, '0');
-  const min = String(agora.getMinutes()).padStart(2, '0');
-  const seg = String(agora.getSeconds()).padStart(2, '0');
+(function () {
+  const hoje = new Date();
+  const min = new Date();
+  min.setDate(hoje.getDate() + 5);
+
+  const f = d => d.toISOString().split('T')[0];
 
   document.getElementById('protocolo').value =
-    `AV-${ano}${mes}${dia}-${hora}${min}${seg}`;
+    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
 
-  document.getElementById('dataAbertura').value =
-    `${ano}-${mes}-${dia}`;
+  document.getElementById('dataAbertura').value = f(hoje);
+  document.getElementById('dataPrevisao').min = f(min);
+  document.getElementById('dataPrevisao').value = f(min);
 })();
 
-/* GARANTE QUE TUDO VÁ EM MAIÚSCULO NO ENVIO */
-document.querySelector('form').addEventListener('submit', function () {
-  const campos = this.querySelectorAll('input[type="text"], textarea');
-  campos.forEach(campo => {
-    campo.value = campo.value.toUpperCase();
+const radios = document.querySelectorAll('input[name="TIPO DE CONTRATAÇÃO"]');
+const sub = document.getElementById('subnivel');
+const ferias = document.getElementById('feriasDatas');
+const nome = document.getElementById('nomeSub');
+const mat = document.getElementById('matSub');
+const ini = document.getElementById('iniFerias');
+const fim = document.getElementById('fimFerias');
+const assunto = document.getElementById('assuntoEmail');
+
+radios.forEach(r => {
+  r.addEventListener('change', () => {
+    sub.classList.add('hidden');
+    ferias.classList.add('hidden');
+    nome.required = mat.required = false;
+    ini.required = false;
+
+    if (['EFETIVA','SUBSTITUICAO','LICENCA MEDICA','COBERTURA DE FERIAS'].includes(r.value)) {
+      sub.classList.remove('hidden');
+      nome.required = mat.required = true;
+    }
+
+    if (r.value === 'COBERTURA DE FERIAS') {
+      ferias.classList.remove('hidden');
+      ini.required = true;
+    }
+
+    assunto.value = `ABERTURA DE VAGA – ${r.value}`;
   });
+});
+
+fim.addEventListener('change', () => {
+  if (fim.value && fim.value <= ini.value) {
+    alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
+    fim.value = '';
+  }
 });
 </script>
 
