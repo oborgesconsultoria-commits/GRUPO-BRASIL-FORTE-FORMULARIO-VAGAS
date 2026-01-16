@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Formulário de Abertura de Vaga</title>
+<title>FORMULÁRIO DE ABERTURA DE VAGA</title>
 
 <style>
 body {
@@ -10,6 +10,7 @@ body {
   padding: 0;
   background: #f2f4f7;
   font-family: Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
 }
 
 .wrapper {
@@ -22,8 +23,8 @@ body {
 }
 
 h1 {
-  margin: 0 0 25px 0;
   font-size: 22px;
+  margin-bottom: 25px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
 }
@@ -48,15 +49,14 @@ label {
   margin-bottom: 5px;
 }
 
-input[type="text"],
-input[type="date"],
-input[type="number"],
+input,
 textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+  text-transform: uppercase;
 }
 
 textarea {
@@ -82,6 +82,7 @@ button {
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 button:hover {
@@ -100,106 +101,125 @@ button:hover {
 
 <div class="wrapper">
 
-<form action="https://formsubmit.co/allan.borges@yahoo.com"
-      method="POST"
-      enctype="multipart/form-data">
+<form
+  action="https://formsubmit.co/allan.borges@grupo123.com.br,rh@grupo123.com.br,gestao@grupo123.com.br"
+  method="POST"
+  enctype="multipart/form-data">
 
-<h1>Formulário de Abertura de Vaga</h1>
+<h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
+
+<!-- PROTOCOLO -->
+<div class="field-group">
+  <label>Nº DO PROTOCOLO</label>
+  <input type="text" name="PROTOCOLO" id="protocolo" readonly>
+</div>
 
 <div class="field-row field-group">
   <div>
-    <label>Data da abertura</label>
-    <input type="date" name="Data da abertura" required>
+    <label>DATA DA ABERTURA</label>
+    <input type="date" name="DATA DA ABERTURA" id="dataAbertura" required>
   </div>
 
   <div>
-    <label>Nome completo do solicitante</label>
-    <input type="text" name="Solicitante" required>
+    <label>SOLICITANTE</label>
+    <input type="text" name="SOLICITANTE" required>
   </div>
 
   <div>
-    <label>Cargo a ser ocupado</label>
-    <input type="text" name="Cargo" required>
+    <label>CARGO</label>
+    <input type="text" name="CARGO" required>
   </div>
 </div>
 
 <div class="field-group">
-  <label>Posto de trabalho</label>
-  <input type="text" name="Posto de trabalho" required>
+  <label>POSTO DE TRABALHO</label>
+  <input type="text" name="POSTO DE TRABALHO" required>
 </div>
 
 <div class="field-group">
-  <label>Funções que o colaborador irá exercer</label>
-  <textarea name="Funções exercidas" rows="3" required></textarea>
+  <label>FUNÇÕES EXERCIDAS</label>
+  <textarea name="FUNÇÕES EXERCIDAS" rows="3" required></textarea>
 </div>
 
 <div class="field-group">
-  <label>Quantidade de vagas</label>
-  <input type="number" name="Quantidade de vagas" min="1" required>
+  <label>QUANTIDADE DE VAGAS</label>
+  <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
 </div>
 
 <div class="field-group">
-  <label>Tipo de contratação</label>
+  <label>TIPO DE CONTRATAÇÃO</label>
   <div class="options">
-    <label><input type="radio" name="Tipo de contratação" value="Efetiva" required> Efetiva</label>
-    <label><input type="radio" name="Tipo de contratação" value="Substituição"> Substituição</label>
-    <label><input type="radio" name="Tipo de contratação" value="Intermitente"> Intermitente</label>
-    <label><input type="radio" name="Tipo de contratação" value="Cobertura de férias"> Cobertura de férias</label>
-    <label><input type="radio" name="Tipo de contratação" value="Licença médica"> Licença médica</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="EFETIVA" required> EFETIVA</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="AUMENTO DE EFETIVO"> AUMENTO DE EFETIVO</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="SUBSTITUIÇÃO"> SUBSTITUIÇÃO</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="COBERTURA DE FÉRIAS"> COBERTURA DE FÉRIAS</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="LICENÇA MÉDICA"> LICENÇA MÉDICA</label>
   </div>
 </div>
 
 <div class="field-row field-group">
   <div>
-    <label>Colaborador substituído ou coberto</label>
-    <input type="text" name="Colaborador substituído">
+    <label>ESCALA</label>
+    <input type="text" name="ESCALA" required>
   </div>
 
   <div>
-    <label>Tipo de vínculo</label>
-    <div class="options">
-      <label><input type="radio" name="Tipo de vínculo" value="Cobertura"> Cobertura</label>
-      <label><input type="radio" name="Tipo de vínculo" value="Substituição"> Substituição</label>
-    </div>
-  </div>
-</div>
-
-<div class="field-row field-group">
-  <div>
-    <label>Escala</label>
-    <input type="text" name="Escala" required>
-  </div>
-
-  <div>
-    <label>Horário de trabalho</label>
-    <input type="text" name="Horário" required>
+    <label>HORÁRIO</label>
+    <input type="text" name="HORÁRIO" required>
   </div>
 </div>
 
 <div class="field-group">
-  <label>Empresa de alocação</label>
+  <label>EMPRESA</label>
   <div class="options">
-    <label><input type="radio" name="Empresa" value="Brasil Forte" required> Brasil Forte</label>
-    <label><input type="radio" name="Empresa" value="Akva Tecnologia"> Akva Tecnologia</label>
-    <label><input type="radio" name="Empresa" value="Atria Serviços"> Atria Serviços</label>
-    <label><input type="radio" name="Empresa" value="Akva Monitoramento"> Akva Monitoramento</label>
-    <label><input type="radio" name="Empresa" value="Akva Proteção (Hefestor)"> Akva Proteção (Hefestor)</label>
+    <label><input type="radio" name="EMPRESA" value="BRASIL FORTE" required> BRASIL FORTE</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA TECNOLOGIA"> AKVA TECNOLOGIA</label>
+    <label><input type="radio" name="EMPRESA" value="ATRIA SERVIÇOS"> ATRIA SERVIÇOS</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA MONITORAMENTO"> AKVA MONITORAMENTO</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA PROTEÇÃO"> AKVA PROTEÇÃO</label>
   </div>
 </div>
 
 <div class="field-group">
-  <label>Anexar currículos (se houver)</label>
-  <input type="file" name="Currículos">
+  <label>ANEXAR CURRÍCULOS (SE HOUVER)</label>
+  <input type="file" name="CURRÍCULOS">
 </div>
 
-<input type="hidden" name="_subject" value="Abertura de vaga - RH">
+<!-- CONFIGURAÇÕES -->
+<input type="hidden" name="_subject" value="ABERTURA DE VAGA - RH">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
 
-<button type="submit">Enviar solicitação</button>
+<button type="submit">ENVIAR SOLICITAÇÃO</button>
 
 </form>
 </div>
+
+<script>
+(function gerarDadosAutomaticos() {
+  const agora = new Date();
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const hora = String(agora.getHours()).padStart(2, '0');
+  const min = String(agora.getMinutes()).padStart(2, '0');
+  const seg = String(agora.getSeconds()).padStart(2, '0');
+
+  document.getElementById('protocolo').value =
+    `AV-${ano}${mes}${dia}-${hora}${min}${seg}`;
+
+  document.getElementById('dataAbertura').value =
+    `${ano}-${mes}-${dia}`;
+})();
+
+/* GARANTE QUE TUDO VÁ EM MAIÚSCULO NO ENVIO */
+document.querySelector('form').addEventListener('submit', function () {
+  const campos = this.querySelectorAll('input[type="text"], textarea');
+  campos.forEach(campo => {
+    campo.value = campo.value.toUpperCase();
+  });
+});
+</script>
 
 </body>
 </html>
