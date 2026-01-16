@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Formulário de Abertura de Vaga</title>
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background: #f2f4f7;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrapper {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+h1 {
+  margin: 0 0 25px 0;
+  font-size: 22px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.field-group {
+  margin-bottom: 18px;
+}
+
+.field-row {
+  display: flex;
+  gap: 15px;
+}
+
+.field-row > div {
+  flex: 1;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.options label {
+  font-weight: normal;
+  margin-bottom: 6px;
+}
+
+.options input {
+  margin-right: 6px;
+}
+
+button {
+  margin-top: 30px;
+  width: 100%;
+  padding: 12px;
+  background: #005baa;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #004080;
+}
+
+@media (max-width: 700px) {
+  .field-row {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<form action="https://formsubmit.co/allan.borges@yahoo.com"
+      method="POST"
+      enctype="multipart/form-data">
+
+<h1>Formulário de Abertura de Vaga</h1>
+
+<div class="field-row field-group">
+  <div>
+    <label>Data da abertura</label>
+    <input type="date" name="Data da abertura" required>
+  </div>
+
+  <div>
+    <label>Nome completo do solicitante</label>
+    <input type="text" name="Solicitante" required>
+  </div>
+
+  <div>
+    <label>Cargo a ser ocupado</label>
+    <input type="text" name="Cargo" required>
+  </div>
+</div>
+
+<div class="field-group">
+  <label>Posto de trabalho</label>
+  <input type="text" name="Posto de trabalho" required>
+</div>
+
+<div class="field-group">
+  <label>Funções que o colaborador irá exercer</label>
+  <textarea name="Funções exercidas" rows="3" required></textarea>
+</div>
+
+<div class="field-group">
+  <label>Quantidade de vagas</label>
+  <input type="number" name="Quantidade de vagas" min="1" required>
+</div>
+
+<div class="field-group">
+  <label>Tipo de contratação</label>
+  <div class="options">
+    <label><input type="radio" name="Tipo de contratação" value="Efetiva" required> Efetiva</label>
+    <label><input type="radio" name="Tipo de contratação" value="Substituição"> Substituição</label>
+    <label><input type="radio" name="Tipo de contratação" value="Intermitente"> Intermitente</label>
+    <label><input type="radio" name="Tipo de contratação" value="Cobertura de férias"> Cobertura de férias</label>
+    <label><input type="radio" name="Tipo de contratação" value="Licença médica"> Licença médica</label>
+  </div>
+</div>
+
+<div class="field-row field-group">
+  <div>
+    <label>Colaborador substituído ou coberto</label>
+    <input type="text" name="Colaborador substituído">
+  </div>
+
+  <div>
+    <label>Tipo de vínculo</label>
+    <div class="options">
+      <label><input type="radio" name="Tipo de vínculo" value="Cobertura"> Cobertura</label>
+      <label><input type="radio" name="Tipo de vínculo" value="Substituição"> Substituição</label>
+    </div>
+  </div>
+</div>
+
+<div class="field-row field-group">
+  <div>
+    <label>Escala</label>
+    <input type="text" name="Escala" required>
+  </div>
+
+  <div>
+    <label>Horário de trabalho</label>
+    <input type="text" name="Horário" required>
+  </div>
+</div>
+
+<div class="field-group">
+  <label>Empresa de alocação</label>
+  <div class="options">
+    <label><input type="radio" name="Empresa" value="Brasil Forte" required> Brasil Forte</label>
+    <label><input type="radio" name="Empresa" value="Akva Tecnologia"> Akva Tecnologia</label>
+    <label><input type="radio" name="Empresa" value="Atria Serviços"> Atria Serviços</label>
+    <label><input type="radio" name="Empresa" value="Akva Monitoramento"> Akva Monitoramento</label>
+    <label><input type="radio" name="Empresa" value="Akva Proteção (Hefestor)"> Akva Proteção (Hefestor)</label>
+  </div>
+</div>
+
+<div class="field-group">
+  <label>Anexar currículos (se houver)</label>
+  <input type="file" name="Currículos">
+</div>
+
+<input type="hidden" name="_subject" value="Abertura de vaga - RH">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_template" value="table">
+
+<button type="submit">Enviar solicitação</button>
+
+</form>
+</div>
+
+</body>
+</html>
