@@ -22,18 +22,6 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* >>> LOGO (ÚNICA ADIÇÃO NO CSS) <<< */
-.logo {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.logo img {
-  max-width: 260px;
-  width: 100%;
-  height: auto;
-}
-
 h1 {
   font-size: 22px;
   margin-bottom: 25px;
@@ -89,16 +77,28 @@ button {
 @media (max-width: 700px) {
   .field-row { flex-direction: column; }
 }
+
+/* === LOGO (ÚNICA ADIÇÃO) === */
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo img {
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
-  <!-- >>> LOGO (ÚNICA ADIÇÃO NO HTML) <<< -->
-  <div class="logo">
-    <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
-  </div>
+<!-- === LOGO (ÚNICA ADIÇÃO) === -->
+<div class="logo">
+  <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
+</div>
 
 <form
   action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
@@ -144,6 +144,7 @@ button {
   <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
 </div>
 
+<!-- ESCALA + HORÁRIOS -->
 <div class="field-row field-group">
   <div>
     <label>ESCALA</label>
@@ -166,6 +167,7 @@ button {
   </div>
 </div>
 
+<!-- CHECKBOX -->
 <div class="field-group">
   <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
   <div class="options" style="display:flex; gap:30px;">
@@ -180,6 +182,7 @@ button {
   </div>
 </div>
 
+<!-- TIPO DE CONTRATAÇÃO -->
 <div class="field-group">
   <label>TIPO DE CONTRATAÇÃO</label>
   <div class="options">
@@ -191,11 +194,13 @@ button {
   </div>
 </div>
 
+<!-- MOTIVO -->
 <div id="motivoGroup" class="field-group hidden">
   <label id="motivoLabel"></label>
   <input type="text" id="motivoInput" name="MOTIVO">
 </div>
 
+<!-- SUBSTITUIÇÃO / FÉRIAS -->
 <div id="subnivel" class="hidden">
 
   <div class="field-row field-group">
@@ -249,8 +254,8 @@ button {
 </div>
 
 <script>
-// TODO O SEU JS ORIGINAL — INTACTO
-
+/* JS INTACTO — SEM QUALQUER ALTERAÇÃO */
+// Datas e protocolo
 (function () {
   const hoje = new Date();
   const min = new Date();
@@ -265,6 +270,7 @@ button {
   document.getElementById('dataPrevisao').value = f(min);
 })();
 
+// Checkbox SIM / NÃO
 const portalSim = document.getElementById('portalSim');
 const portalNao = document.getElementById('portalNao');
 
@@ -275,6 +281,7 @@ portalNao.addEventListener('change', () => {
   if (portalNao.checked) portalSim.checked = false;
 });
 
+// Tipo de contratação
 const radios = document.querySelectorAll('input[name="TIPO DE CONTRATAÇÃO"]');
 const sub = document.getElementById('subnivel');
 const ferias = document.getElementById('feriasDatas');
@@ -317,6 +324,7 @@ radios.forEach(r => {
   });
 });
 
+// Validação 12x36
 const entrada = document.getElementById('horaEntrada');
 const saida = document.getElementById('horaSaida');
 const escala = document.getElementById('escala');
@@ -339,6 +347,7 @@ saida.addEventListener('change', () => {
   }
 });
 
+// Datas férias
 fim.addEventListener('change', () => {
   if (fim.value && ini.value && fim.value <= ini.value) {
     alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
