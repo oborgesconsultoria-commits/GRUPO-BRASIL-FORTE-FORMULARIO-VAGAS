@@ -78,7 +78,7 @@ button {
   .field-row { flex-direction: column; }
 }
 
-/* === LOGO (ÚNICA ADIÇÃO) === */
+/* LOGO */
 .logo {
   text-align: center;
   margin-bottom: 20px;
@@ -95,12 +95,12 @@ button {
 <body>
 <div class="wrapper">
 
-<!-- === LOGO (ÚNICA ADIÇÃO) === -->
 <div class="logo">
   <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
 </div>
 
 <form
+  id="formVaga"
   action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
   method="POST"
   enctype="multipart/form-data">
@@ -144,7 +144,6 @@ button {
   <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
 </div>
 
-<!-- ESCALA + HORÁRIOS -->
 <div class="field-row field-group">
   <div>
     <label>ESCALA</label>
@@ -167,7 +166,7 @@ button {
   </div>
 </div>
 
-<!-- CHECKBOX -->
+<!-- CHECKBOX SIM / NÃO (ALINHADOS E OBRIGATÓRIOS) -->
 <div class="field-group">
   <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
   <div class="options" style="display:flex; gap:30px;">
@@ -182,7 +181,6 @@ button {
   </div>
 </div>
 
-<!-- TIPO DE CONTRATAÇÃO -->
 <div class="field-group">
   <label>TIPO DE CONTRATAÇÃO</label>
   <div class="options">
@@ -194,13 +192,11 @@ button {
   </div>
 </div>
 
-<!-- MOTIVO -->
 <div id="motivoGroup" class="field-group hidden">
   <label id="motivoLabel"></label>
   <input type="text" id="motivoInput" name="MOTIVO">
 </div>
 
-<!-- SUBSTITUIÇÃO / FÉRIAS -->
 <div id="subnivel" class="hidden">
 
   <div class="field-row field-group">
@@ -254,7 +250,8 @@ button {
 </div>
 
 <script>
-/* JS INTACTO — SEM QUALQUER ALTERAÇÃO */
+/* JS ORIGINAL + VALIDAÇÃO SIM/NÃO */
+
 // Datas e protocolo
 (function () {
   const hoje = new Date();
@@ -270,7 +267,7 @@ button {
   document.getElementById('dataPrevisao').value = f(min);
 })();
 
-// Checkbox SIM / NÃO
+// Checkbox SIM / NÃO (exclusivo)
 const portalSim = document.getElementById('portalSim');
 const portalNao = document.getElementById('portalNao');
 
@@ -279,6 +276,14 @@ portalSim.addEventListener('change', () => {
 });
 portalNao.addEventListener('change', () => {
   if (portalNao.checked) portalSim.checked = false;
+});
+
+// OBRIGATORIEDADE SIM / NÃO
+document.getElementById('formVaga').addEventListener('submit', function (e) {
+  if (!portalSim.checked && !portalNao.checked) {
+    alert('SELECIONE SIM OU NÃO EM "CADASTRAMENTO PRÉVIO EM PORTAL"');
+    e.preventDefault();
+  }
 });
 
 // Tipo de contratação
