@@ -22,7 +22,7 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* LOGO */
+/* >>> LOGO (ÚNICA ADIÇÃO NO CSS) <<< */
 .logo {
   text-align: center;
   margin-bottom: 20px;
@@ -39,7 +39,6 @@ h1 {
   margin-bottom: 25px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
-  text-align: center;
 }
 
 .field-group { margin-bottom: 18px; }
@@ -96,7 +95,7 @@ button {
 <body>
 <div class="wrapper">
 
-  <!-- LOGO -->
+  <!-- >>> LOGO (ÚNICA ADIÇÃO NO HTML) <<< -->
   <div class="logo">
     <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
   </div>
@@ -167,8 +166,82 @@ button {
   </div>
 </div>
 
+<div class="field-group">
+  <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
+  <div class="options" style="display:flex; gap:30px;">
+    <label>
+      <input type="checkbox" id="portalSim" name="CADASTRAMENTO PREVIO EM PORTAL" value="SIM">
+      SIM
+    </label>
+    <label>
+      <input type="checkbox" id="portalNao" name="CADASTRAMENTO PREVIO EM PORTAL" value="NÃO">
+      NÃO
+    </label>
+  </div>
+</div>
+
+<div class="field-group">
+  <label>TIPO DE CONTRATAÇÃO</label>
+  <div class="options">
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="AUMENTO DE EFETIVO" required> AUMENTO DE EFETIVO</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="COBERTURA DE FERIAS"> COBERTURA DE FÉRIAS</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="INTERMITENTE"> INTERMITENTE</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="LICENCA MEDICA"> LICENÇA MÉDICA</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="SUBSTITUICAO"> SUBSTITUIÇÃO</label>
+  </div>
+</div>
+
+<div id="motivoGroup" class="field-group hidden">
+  <label id="motivoLabel"></label>
+  <input type="text" id="motivoInput" name="MOTIVO">
+</div>
+
+<div id="subnivel" class="hidden">
+
+  <div class="field-row field-group">
+    <div>
+      <label>NOME DO COLABORADOR SUBSTITUÍDO</label>
+      <input type="text" id="nomeSub" name="NOME COLABORADOR SUBSTITUIDO">
+    </div>
+    <div>
+      <label>MATRÍCULA DO COLABORADOR SUBSTITUÍDO</label>
+      <input type="text" id="matSub" name="MATRICULA COLABORADOR SUBSTITUIDO">
+    </div>
+  </div>
+
+  <div id="feriasDatas" class="field-row field-group hidden">
+    <div>
+      <label>DATA INÍCIO COBERTURA</label>
+      <input type="date" id="iniFerias" name="DATA INICIO COBERTURA">
+    </div>
+    <div>
+      <label>DATA FINAL COBERTURA</label>
+      <input type="date" id="fimFerias" name="DATA FINAL COBERTURA">
+    </div>
+  </div>
+
+</div>
+
+<div class="field-group">
+  <label>EMPRESA</label>
+  <div class="options">
+    <label><input type="radio" name="EMPRESA" value="AKVA MONITORAMENTO" required> AKVA MONITORAMENTO</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA PROTECAO (HEFESTOR)"> AKVA PROTEÇÃO (HEFESTOR)</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA TECNOLOGIA"> AKVA TECNOLOGIA</label>
+    <label><input type="radio" name="EMPRESA" value="ATRIA SERVICOS"> ATRIA SERVIÇOS</label>
+    <label><input type="radio" name="EMPRESA" value="BRASIL FORTE"> BRASIL FORTE</label>
+  </div>
+</div>
+
+<div class="field-group">
+  <label>ANEXAR CURRÍCULOS (SE HOUVER)</label>
+  <input type="file" name="CURRICULOS">
+</div>
+
+<input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
+<input type="hidden" name="_subject" id="assuntoEmail">
 
 <button type="submit">ENVIAR SOLICITAÇÃO</button>
 
@@ -176,6 +249,8 @@ button {
 </div>
 
 <script>
+// TODO O SEU JS ORIGINAL — INTACTO
+
 (function () {
   const hoje = new Date();
   const min = new Date();
@@ -189,6 +264,87 @@ button {
   document.getElementById('dataPrevisao').min = f(min);
   document.getElementById('dataPrevisao').value = f(min);
 })();
+
+const portalSim = document.getElementById('portalSim');
+const portalNao = document.getElementById('portalNao');
+
+portalSim.addEventListener('change', () => {
+  if (portalSim.checked) portalNao.checked = false;
+});
+portalNao.addEventListener('change', () => {
+  if (portalNao.checked) portalSim.checked = false;
+});
+
+const radios = document.querySelectorAll('input[name="TIPO DE CONTRATAÇÃO"]');
+const sub = document.getElementById('subnivel');
+const ferias = document.getElementById('feriasDatas');
+const nome = document.getElementById('nomeSub');
+const mat = document.getElementById('matSub');
+const ini = document.getElementById('iniFerias');
+const fim = document.getElementById('fimFerias');
+const assunto = document.getElementById('assuntoEmail');
+const motivoGroup = document.getElementById('motivoGroup');
+const motivoLabel = document.getElementById('motivoLabel');
+const motivoInput = document.getElementById('motivoInput');
+
+radios.forEach(r => {
+  r.addEventListener('change', () => {
+    sub.classList.add('hidden');
+    ferias.classList.add('hidden');
+    motivoGroup.classList.add('hidden');
+    motivoInput.required = false;
+    nome.required = mat.required = false;
+    ini.required = false;
+
+    assunto.value = `ABERTURA DE VAGA – ${r.value}`;
+
+    if (!['COBERTURA DE FERIAS','LICENCA MEDICA'].includes(r.value)) {
+      motivoGroup.classList.remove('hidden');
+      motivoInput.required = true;
+      const prep = r.value.endsWith('AO') ? 'DA' : 'DO';
+      motivoLabel.innerText = `MOTIVO ${prep} ${r.value}`;
+    }
+
+    if (['SUBSTITUICAO','COBERTURA DE FERIAS','LICENCA MEDICA'].includes(r.value)) {
+      sub.classList.remove('hidden');
+      nome.required = mat.required = true;
+    }
+
+    if (r.value === 'COBERTURA DE FERIAS') {
+      ferias.classList.remove('hidden');
+      ini.required = true;
+    }
+  });
+});
+
+const entrada = document.getElementById('horaEntrada');
+const saida = document.getElementById('horaSaida');
+const escala = document.getElementById('escala');
+
+saida.addEventListener('change', () => {
+  if (!entrada.value || !saida.value) return;
+
+  const toMinutes = t => {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+  };
+
+  let iniMin = toMinutes(entrada.value);
+  let fimMin = toMinutes(saida.value);
+  if (fimMin <= iniMin) fimMin += 1440;
+
+  if (escala.value === '12X36' && (fimMin - iniMin) < 11 * 60) {
+    alert('ESCALA 12X36 DEVE TER APROXIMADAMENTE 12 HORAS');
+    saida.value = '';
+  }
+});
+
+fim.addEventListener('change', () => {
+  if (fim.value && ini.value && fim.value <= ini.value) {
+    alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
+    fim.value = '';
+  }
+});
 </script>
 
 </body>
