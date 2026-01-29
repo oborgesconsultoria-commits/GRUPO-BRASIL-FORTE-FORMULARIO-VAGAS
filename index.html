@@ -78,7 +78,6 @@ button {
   .field-row { flex-direction: column; }
 }
 
-/* LOGO */
 .logo {
   text-align: center;
   margin-bottom: 20px;
@@ -112,6 +111,13 @@ button {
   <input type="text" id="protocolo" name="PROTOCOLO" readonly>
 </div>
 
+<!-- SOLICITANTE -->
+<div class="field-group">
+  <label>SOLICITANTE</label>
+  <input type="text" name="SOLICITANTE" required>
+</div>
+
+<!-- DATAS -->
 <div class="field-row field-group">
   <div>
     <label>DATA DA ABERTURA</label>
@@ -123,25 +129,22 @@ button {
   </div>
 </div>
 
-<div class="field-row field-group">
-  <div>
-    <label>SOLICITANTE</label>
-    <input type="text" name="SOLICITANTE" required>
-  </div>
-  <div>
-    <label>CARGO</label>
-    <input type="text" name="CARGO" required>
-  </div>
+<!-- QUANTIDADE -->
+<div class="field-group">
+  <label>QUANTIDADE DE VAGAS</label>
+  <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
 </div>
 
+<!-- POSTO -->
 <div class="field-group">
   <label>POSTO DE TRABALHO</label>
   <input type="text" name="POSTO DE TRABALHO" required>
 </div>
 
+<!-- CARGO -->
 <div class="field-group">
-  <label>QUANTIDADE DE VAGAS</label>
-  <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
+  <label>CARGO</label>
+  <input type="text" name="CARGO" required>
 </div>
 
 <div class="field-row field-group">
@@ -166,18 +169,11 @@ button {
   </div>
 </div>
 
-<!-- CHECKBOX SIM / NÃO (ALINHADOS E OBRIGATÓRIOS) -->
 <div class="field-group">
   <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
   <div class="options" style="display:flex; gap:30px;">
-    <label>
-      <input type="checkbox" id="portalSim" name="CADASTRAMENTO PREVIO EM PORTAL" value="SIM">
-      SIM
-    </label>
-    <label>
-      <input type="checkbox" id="portalNao" name="CADASTRAMENTO PREVIO EM PORTAL" value="NÃO">
-      NÃO
-    </label>
+    <label><input type="checkbox" id="portalSim" name="CADASTRAMENTO PREVIO EM PORTAL" value="SIM"> SIM</label>
+    <label><input type="checkbox" id="portalNao" name="CADASTRAMENTO PREVIO EM PORTAL" value="NÃO"> NÃO</label>
   </div>
 </div>
 
@@ -250,7 +246,14 @@ button {
 </div>
 
 <script>
-/* JS ORIGINAL + VALIDAÇÃO SIM/NÃO */
+/* CONVERSÃO AUTOMÁTICA PARA MAIÚSCULO */
+document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+  el.addEventListener('input', () => {
+    el.value = el.value.toUpperCase();
+  });
+});
+
+/* JS ORIGINAL */
 
 // Datas e protocolo
 (function () {
@@ -267,7 +270,7 @@ button {
   document.getElementById('dataPrevisao').value = f(min);
 })();
 
-// Checkbox SIM / NÃO (exclusivo)
+// Checkbox SIM / NÃO
 const portalSim = document.getElementById('portalSim');
 const portalNao = document.getElementById('portalNao');
 
@@ -278,7 +281,6 @@ portalNao.addEventListener('change', () => {
   if (portalNao.checked) portalSim.checked = false;
 });
 
-// OBRIGATORIEDADE SIM / NÃO
 document.getElementById('formVaga').addEventListener('submit', function (e) {
   if (!portalSim.checked && !portalNao.checked) {
     alert('SELECIONE SIM OU NÃO EM "CADASTRAMENTO PRÉVIO EM PORTAL"');
