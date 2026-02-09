@@ -341,7 +341,7 @@ saida.addEventListener('change', () => {
   }
 });
 
-/* >>> ÚNICO AJUSTE FEITO <<< */
+/* >>> ÚNICA ALTERAÇÃO <<< */
 ini.addEventListener('change', () => {
   if (ini.value) {
     fim.min = ini.value;
@@ -351,6 +351,8 @@ ini.addEventListener('change', () => {
 
 fim.addEventListener('change', () => {
   if (!ini.value || !fim.value) return;
+
+  if (fim.value.length !== 10) return;
 
   const dataIni = new Date(ini.value);
   const dataFim = new Date(fim.value);
