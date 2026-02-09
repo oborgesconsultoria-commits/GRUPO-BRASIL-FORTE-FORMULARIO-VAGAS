@@ -341,8 +341,21 @@ saida.addEventListener('change', () => {
   }
 });
 
+/* >>> ÚNICO AJUSTE FEITO <<< */
+ini.addEventListener('change', () => {
+  if (ini.value) {
+    fim.min = ini.value;
+    fim.value = '';
+  }
+});
+
 fim.addEventListener('change', () => {
-  if (fim.value && ini.value && fim.value <= ini.value) {
+  if (!ini.value || !fim.value) return;
+
+  const dataIni = new Date(ini.value);
+  const dataFim = new Date(fim.value);
+
+  if (dataFim <= dataIni) {
     alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
     fim.value = '';
   }
