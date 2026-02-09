@@ -111,13 +111,11 @@ button {
   <input type="text" id="protocolo" name="PROTOCOLO" readonly>
 </div>
 
-<!-- SOLICITANTE -->
 <div class="field-group">
   <label>SOLICITANTE</label>
   <input type="text" name="SOLICITANTE" required>
 </div>
 
-<!-- DATAS -->
 <div class="field-row field-group">
   <div>
     <label>DATA DA ABERTURA</label>
@@ -129,19 +127,16 @@ button {
   </div>
 </div>
 
-<!-- QUANTIDADE -->
 <div class="field-group">
   <label>QUANTIDADE DE VAGAS</label>
   <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
 </div>
 
-<!-- POSTO -->
 <div class="field-group">
   <label>POSTO DE TRABALHO</label>
   <input type="text" name="POSTO DE TRABALHO" required>
 </div>
 
-<!-- CARGO -->
 <div class="field-group">
   <label>CARGO</label>
   <input type="text" name="CARGO" required>
@@ -194,7 +189,6 @@ button {
 </div>
 
 <div id="subnivel" class="hidden">
-
   <div class="field-row field-group">
     <div>
       <label>NOME DO COLABORADOR SUBSTITUÍDO</label>
@@ -216,7 +210,6 @@ button {
       <input type="date" id="fimFerias" name="DATA FINAL COBERTURA">
     </div>
   </div>
-
 </div>
 
 <div class="field-group">
@@ -227,7 +220,7 @@ button {
     <label><input type="radio" name="EMPRESA" value="AKVA TECNOLOGIA"> AKVA TECNOLOGIA</label>
     <label><input type="radio" name="EMPRESA" value="ATRIA SERVICOS"> ATRIA SERVIÇOS</label>
     <label><input type="radio" name="EMPRESA" value="BRASIL FORTE"> BRASIL FORTE</label>
-    <label><input type="radio" name="EMPRESA" value="VEGA SERVICOS"> VEGA SERVICOS</label>
+    <label><input type="radio" name="EMPRESA" value="VEGA SERVICOS"> VEGA SERVIÇOS</label>
   </div>
 </div>
 
@@ -247,16 +240,12 @@ button {
 </div>
 
 <script>
-/* CONVERSÃO AUTOMÁTICA PARA MAIÚSCULO */
 document.querySelectorAll('input[type="text"], textarea').forEach(el => {
   el.addEventListener('input', () => {
     el.value = el.value.toUpperCase();
   });
 });
 
-/* JS ORIGINAL */
-
-// Datas e protocolo
 (function () {
   const hoje = new Date();
   const min = new Date();
@@ -271,7 +260,6 @@ document.querySelectorAll('input[type="text"], textarea').forEach(el => {
   document.getElementById('dataPrevisao').value = f(min);
 })();
 
-// Checkbox SIM / NÃO
 const portalSim = document.getElementById('portalSim');
 const portalNao = document.getElementById('portalNao');
 
@@ -289,7 +277,6 @@ document.getElementById('formVaga').addEventListener('submit', function (e) {
   }
 });
 
-// Tipo de contratação
 const radios = document.querySelectorAll('input[name="TIPO DE CONTRATAÇÃO"]');
 const sub = document.getElementById('subnivel');
 const ferias = document.getElementById('feriasDatas');
@@ -332,7 +319,6 @@ radios.forEach(r => {
   });
 });
 
-// Validação 12x36
 const entrada = document.getElementById('horaEntrada');
 const saida = document.getElementById('horaSaida');
 const escala = document.getElementById('escala');
@@ -355,7 +341,6 @@ saida.addEventListener('change', () => {
   }
 });
 
-// Datas férias
 fim.addEventListener('change', () => {
   if (fim.value && ini.value && fim.value <= ini.value) {
     alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
