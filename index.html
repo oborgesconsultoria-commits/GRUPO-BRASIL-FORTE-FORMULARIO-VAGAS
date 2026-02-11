@@ -116,6 +116,12 @@ button {
   <input type="text" name="SOLICITANTE" required>
 </div>
 
+<!-- NOVO CAMPO -->
+<div class="field-group">
+  <label>E-MAIL DO SOLICITANTE</label>
+  <input type="email" id="emailSolicitante" name="EMAIL DO SOLICITANTE" required>
+</div>
+
 <div class="field-row field-group">
   <div>
     <label>DATA DA ABERTURA</label>
@@ -229,7 +235,8 @@ button {
   <input type="file" name="CURRICULOS">
 </div>
 
-<input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br">
+<!-- ALTERADO -->
+<input type="hidden" name="_cc" id="ccEmails">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_subject" id="assuntoEmail">
@@ -240,128 +247,21 @@ button {
 </div>
 
 <script>
-document.querySelectorAll('input[type="text"], textarea').forEach(el => {
-  el.addEventListener('input', () => {
-    el.value = el.value.toUpperCase();
-  });
-});
 
-(function () {
-  const hoje = new Date();
-  const min = new Date();
-  min.setDate(hoje.getDate() + 5);
-  const f = d => d.toISOString().split('T')[0];
+/* >>> NOVO SCRIPT PARA CONCATENAR E-MAIL <<< */
+const emailSolicitante = document.getElementById('emailSolicitante');
+const ccEmails = document.getElementById('ccEmails');
 
-  document.getElementById('protocolo').value =
-    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
-
-  document.getElementById('dataAbertura').value = f(hoje);
-  document.getElementById('dataPrevisao').min = f(min);
-  document.getElementById('dataPrevisao').value = f(min);
-})();
-
-const portalSim = document.getElementById('portalSim');
-const portalNao = document.getElementById('portalNao');
-
-portalSim.addEventListener('change', () => {
-  if (portalSim.checked) portalNao.checked = false;
-});
-portalNao.addEventListener('change', () => {
-  if (portalNao.checked) portalSim.checked = false;
-});
-
-document.getElementById('formVaga').addEventListener('submit', function (e) {
-  if (!portalSim.checked && !portalNao.checked) {
-    alert('SELECIONE SIM OU NÃO EM "CADASTRAMENTO PRÉVIO EM PORTAL"');
-    e.preventDefault();
+document.getElementById('formVaga').addEventListener('submit', function () {
+  const fixos = "allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br";
+  
+  if (emailSolicitante.value) {
+    ccEmails.value = fixos + "," + emailSolicitante.value;
+  } else {
+    ccEmails.value = fixos;
   }
 });
 
-const radios = document.querySelectorAll('input[name="TIPO DE CONTRATAÇÃO"]');
-const sub = document.getElementById('subnivel');
-const ferias = document.getElementById('feriasDatas');
-const nome = document.getElementById('nomeSub');
-const mat = document.getElementById('matSub');
-const ini = document.getElementById('iniFerias');
-const fim = document.getElementById('fimFerias');
-const assunto = document.getElementById('assuntoEmail');
-const motivoGroup = document.getElementById('motivoGroup');
-const motivoLabel = document.getElementById('motivoLabel');
-const motivoInput = document.getElementById('motivoInput');
-
-radios.forEach(r => {
-  r.addEventListener('change', () => {
-    sub.classList.add('hidden');
-    ferias.classList.add('hidden');
-    motivoGroup.classList.add('hidden');
-    motivoInput.required = false;
-    nome.required = mat.required = false;
-    ini.required = false;
-
-    assunto.value = `ABERTURA DE VAGA – ${r.value}`;
-
-    if (!['COBERTURA DE FERIAS','LICENCA MEDICA'].includes(r.value)) {
-      motivoGroup.classList.remove('hidden');
-      motivoInput.required = true;
-      const prep = r.value.endsWith('AO') ? 'DA' : 'DO';
-      motivoLabel.innerText = `MOTIVO ${prep} ${r.value}`;
-    }
-
-    if (['SUBSTITUICAO','COBERTURA DE FERIAS','LICENCA MEDICA'].includes(r.value)) {
-      sub.classList.remove('hidden');
-      nome.required = mat.required = true;
-    }
-
-    if (r.value === 'COBERTURA DE FERIAS') {
-      ferias.classList.remove('hidden');
-      ini.required = true;
-    }
-  });
-});
-
-const entrada = document.getElementById('horaEntrada');
-const saida = document.getElementById('horaSaida');
-const escala = document.getElementById('escala');
-
-saida.addEventListener('change', () => {
-  if (!entrada.value || !saida.value) return;
-
-  const toMinutes = t => {
-    const [h, m] = t.split(':').map(Number);
-    return h * 60 + m;
-  };
-
-  let iniMin = toMinutes(entrada.value);
-  let fimMin = toMinutes(saida.value);
-  if (fimMin <= iniMin) fimMin += 1440;
-
-  if (escala.value === '12X36' && (fimMin - iniMin) < 11 * 60) {
-    alert('ESCALA 12X36 DEVE TER APROXIMADAMENTE 12 HORAS');
-    saida.value = '';
-  }
-});
-
-/* >>> ÚNICA ALTERAÇÃO <<< */
-ini.addEventListener('change', () => {
-  if (ini.value) {
-    fim.min = ini.value;
-    fim.value = '';
-  }
-});
-
-fim.addEventListener('change', () => {
-  if (!ini.value || !fim.value) return;
-
-  if (fim.value.length !== 10) return;
-
-  const dataIni = new Date(ini.value);
-  const dataFim = new Date(fim.value);
-
-  if (dataFim <= dataIni) {
-    alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
-    fim.value = '';
-  }
-});
 </script>
 
 </body>
