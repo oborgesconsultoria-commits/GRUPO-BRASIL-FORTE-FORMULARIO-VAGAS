@@ -116,7 +116,6 @@ button {
   <input type="text" name="SOLICITANTE" required>
 </div>
 
-<!-- NOVO CAMPO -->
 <div class="field-group">
   <label>E-MAIL DO SOLICITANTE</label>
   <input type="email" id="emailSolicitante" name="EMAIL DO SOLICITANTE" required>
@@ -235,7 +234,6 @@ button {
   <input type="file" name="CURRICULOS">
 </div>
 
-<!-- ALTERADO -->
 <input type="hidden" name="_cc" id="ccEmails">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
@@ -248,18 +246,25 @@ button {
 
 <script>
 
-/* >>> NOVO SCRIPT PARA CONCATENAR E-MAIL <<< */
-const emailSolicitante = document.getElementById('emailSolicitante');
-const ccEmails = document.getElementById('ccEmails');
+/* >>> SEU SCRIPT ORIGINAL CONTINUA AQUI (NÃO ALTERADO) <<< */
+
+
+
+/* >>> INCLUSÃO DO E-MAIL DO SOLICITANTE NO MESMO LOTE <<< */
 
 document.getElementById('formVaga').addEventListener('submit', function () {
+
+  const emailSolicitante = document.getElementById('emailSolicitante').value.trim();
+  const ccEmails = document.getElementById('ccEmails');
+
   const fixos = "allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br";
-  
-  if (emailSolicitante.value) {
-    ccEmails.value = fixos + "," + emailSolicitante.value;
+
+  if (emailSolicitante && !fixos.includes(emailSolicitante)) {
+    ccEmails.value = fixos + "," + emailSolicitante;
   } else {
     ccEmails.value = fixos;
   }
+
 });
 
 </script>
