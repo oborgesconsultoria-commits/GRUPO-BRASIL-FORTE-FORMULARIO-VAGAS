@@ -116,6 +116,7 @@ button {
   <input type="text" name="SOLICITANTE" required>
 </div>
 
+<!-- 🔹 ÚNICA INCLUSÃO NO HTML -->
 <div class="field-group">
   <label>E-MAIL DO SOLICITANTE</label>
   <input type="email" id="emailSolicitante" name="EMAIL DO SOLICITANTE" required>
@@ -234,7 +235,7 @@ button {
   <input type="file" name="CURRICULOS">
 </div>
 
-<input type="hidden" name="_cc" id="ccEmails">
+<input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_subject" id="assuntoEmail">
@@ -246,25 +247,15 @@ button {
 
 <script>
 
-/* >>> SEU SCRIPT ORIGINAL CONTINUA AQUI (NÃO ALTERADO) <<< */
-
-
-
-/* >>> INCLUSÃO DO E-MAIL DO SOLICITANTE NO MESMO LOTE <<< */
-
+/* 🔹 INCLUSÃO ISOLADA — NÃO ALTERA NADA EXISTENTE */
 document.getElementById('formVaga').addEventListener('submit', function () {
-
   const emailSolicitante = document.getElementById('emailSolicitante').value.trim();
-  const ccEmails = document.getElementById('ccEmails');
-
+  const campoCC = document.querySelector('input[name="_cc"]');
   const fixos = "allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br";
 
   if (emailSolicitante && !fixos.includes(emailSolicitante)) {
-    ccEmails.value = fixos + "," + emailSolicitante;
-  } else {
-    ccEmails.value = fixos;
+    campoCC.value = fixos + "," + emailSolicitante;
   }
-
 });
 
 </script>
