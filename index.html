@@ -242,6 +242,27 @@ button {
   <input type="file" name="CURRICULOS">
 </div>
 
+<!-- BLOCO CANDIDATO -->
+<div class="field-group">
+  <label>NOME DO CANDIDATO</label>
+  <input type="text" id="nomeCandidato" name="NOME DO CANDIDATO">
+</div>
+
+<div class="field-group">
+  <label>TELEFONE DO CANDIDATO</label>
+  <input type="text" id="telefoneCandidato" name="TELEFONE DO CANDIDATO" maxlength="15">
+</div>
+
+<div class="field-group">
+  <label>NÚMERO POSSUI WHATSAPP?</label>
+  <div class="options">
+    <label>
+      <input type="checkbox" id="flagWhatsapp" name="NUMERO POSSUI WHATSAPP" value="SIM">
+      SIM
+    </label>
+  </div>
+</div>
+  
 <input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
@@ -379,6 +400,76 @@ document.getElementById('formVaga').addEventListener('submit', function () {
   }
 });
 
+/* MÁSCARA TELEFONE CANDIDATO */
+const tel = document.getElementById('telefoneCandidato');
+
+if (tel) {
+  tel.addEventListener('input', function () {
+    let v = tel.value.replace(/\D/g, '');
+    if (v.length > 11) v = v.slice(0, 11);
+
+    if (v.length > 6)
+      tel.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+    else if (v.length > 2)
+      tel.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
+    else
+      tel.value = v;
+  });
+}
+
+/* CONFIRMAÇÃO + PDF FORMATADO */
+document.getElementById('formVaga').addEventListener('submit', function (e) {
+
+  if (!confirm('CONFIRMA O ENVIO DA SOLICITAÇÃO?')) {
+    e.preventDefault();
+    return;
+  }
+
+  e.preventDefault(); // segura envio até gerar PDF
+
+  const formData = new FormData(this);
+  let conteudo = '';
+
+ for (let [key, value] of formData.entries()) {
+
+  // ignora campos internos
+  if (key.startsWith('_')) continue;
+
+  // ignora arquivos (para não aparecer [object File] no PDF)
+  if (value instanceof File) continue;
+
+  if (value) {
+      conteudo += `<tr>
+        <td style="padding:6px; border:1px solid #ccc; font-weight:bold;">${key}</td>
+        <td style="padding:6px; border:1px solid #ccc;">${value}</td>
+      </tr>`;
+    }
+  }
+
+  const janela = window.open('', '', 'width=900,height=800');
+  janela.document.write(`
+    <html>
+    <head>
+      <title>ABERTURA DE VAGA</title>
+    </head>
+    <body style="font-family: Arial; padding:30px;">
+      <h2 style="text-align:center;">FORMULÁRIO DE ABERTURA DE VAGA</h2>
+      <table style="width:100%; border-collapse:collapse;">
+        ${conteudo}
+      </table>
+    </body>
+    </html>
+  `);
+
+  janela.document.close();
+  janela.print();
+
+  setTimeout(() => {
+    this.submit(); // envia após imprimir
+  }, 1000);
+
+});
+  
 </script>
 
 </body>
