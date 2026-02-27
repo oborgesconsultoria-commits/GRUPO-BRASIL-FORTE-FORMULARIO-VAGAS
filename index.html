@@ -253,13 +253,21 @@ button {
   <input type="text" id="telefoneCandidato" name="TELEFONE DO CANDIDATO" maxlength="15">
 </div>
 
+
 <div class="field-group">
   <label>NÚMERO POSSUI WHATSAPP?</label>
-  <div class="options">
+  <div class="options" style="display:flex; gap:30px;">
+    
     <label>
-      <input type="checkbox" id="flagWhatsapp" name="NUMERO POSSUI WHATSAPP" value="SIM">
+      <input type="radio" name="possui_whatsapp" value="SIM" required>
       SIM
     </label>
+
+    <label>
+      <input type="radio" name="possui_whatsapp" value="NAO">
+      NÃO
+    </label>
+
   </div>
 </div>
   
