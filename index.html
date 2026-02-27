@@ -276,8 +276,9 @@ button {
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_subject" id="assuntoEmail">
 
-<button type="submit">ENVIAR SOLICITAÇÃO</button>
-
+<button type="button" id="btnPrevia">GERAR PRÉVIA</button>
+<button type="submit" id="btnEnviar" class="hidden">ENVIAR DEFINITIVO</button>
+  
 </form>
 </div>
 
@@ -397,16 +398,6 @@ fim.addEventListener('change', () => {
     fim.value = '';
   }
 });
-  /* INCLUSÃO DO E-MAIL DO SOLICITANTE COMO CÓPIA */
-
-document.getElementById('formVaga').addEventListener('submit', function () {
-  const emailSolicitante = document.getElementById('emailSolicitante').value.trim();
-  const campoCC = document.querySelector('input[name="_cc"]');
-
-  if (emailSolicitante) {
-    campoCC.value = campoCC.value + "," + emailSolicitante;
-  }
-});
 
 /* MÁSCARA TELEFONE CANDIDATO */
 const tel = document.getElementById('telefoneCandidato');
@@ -425,59 +416,97 @@ if (tel) {
   });
 }
 
-/* CONFIRMAÇÃO + PDF FORMATADO */
-document.getElementById('formVaga').addEventListener('submit', function (e) {
+/* ===== PRÉVIA + ENVIO DEFINITIVO ===== */
 
-  if (!confirm('CONFIRMA O ENVIO DA SOLICITAÇÃO?')) {
-    e.preventDefault();
+const form = document.getElementById('formVaga');
+const btnPrevia = document.getElementById('btnPrevia');
+const btnEnviar = document.getElementById('btnEnviar');
+
+btnPrevia.addEventListener('click', function () {
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
     return;
   }
 
-  e.preventDefault(); // segura envio até gerar PDF
-
-  const formData = new FormData(this);
+  const formData = new FormData(form);
   let conteudo = '';
 
- for (let [key, value] of formData.entries()) {
+  const destinatarios = `
+<tr>
+  <td style="padding:6px;border:1px solid #ccc;font-weight:bold;">
+    DESTINATÁRIOS
+  </td>
+  <td style="padding:6px;border:1px solid #ccc;">
+    PARA: mayara.dantas@grupobrasilforte.com.br <br>
+    CC: allan.borges@grupobrasilforte.com.br, maria.fernanda@grupobrasilforte.com.br <br>
+    SOLICITANTE: ${document.getElementById('emailSolicitante').value}
+  </td>
+</tr>
+`;
 
-  // ignora campos internos
-  if (key.startsWith('_')) continue;
+  for (let [key, value] of formData.entries()) {
 
-  // ignora arquivos (para não aparecer [object File] no PDF)
-  if (value instanceof File) continue;
+    if (key.startsWith('_')) continue;
+    if (value instanceof File) continue;
 
-  if (value) {
-      conteudo += `<tr>
-        <td style="padding:6px; border:1px solid #ccc; font-weight:bold;">${key}</td>
-        <td style="padding:6px; border:1px solid #ccc;">${value}</td>
-      </tr>`;
+    if (value) {
+      conteudo += `
+        <tr>
+          <td style="padding:6px;border:1px solid #ccc;font-weight:bold;">
+           ${key.replaceAll('_',' ').toUpperCase()}
+          </td>
+          <td style="padding:6px;border:1px solid #ccc;">
+            ${value}
+          </td>
+        </tr>`;
     }
   }
 
   const janela = window.open('', '', 'width=900,height=800');
+
   janela.document.write(`
     <html>
     <head>
-      <title>ABERTURA DE VAGA</title>
+      <title>PRÉVIA – ABERTURA DE VAGA</title>
     </head>
-    <body style="font-family: Arial; padding:30px;">
-      <h2 style="text-align:center;">FORMULÁRIO DE ABERTURA DE VAGA</h2>
-      <table style="width:100%; border-collapse:collapse;">
-        ${conteudo}
-      </table>
+    <body style="font-family:Arial;padding:30px;">
+      <h2 style="text-align:center;">PRÉVIA – FORMULÁRIO DE ABERTURA DE VAGA</h2>
+     <table style="width:100%;border-collapse:collapse;">
+  ${destinatarios}
+  ${conteudo}
+</table>
+      <br><br>
+      <button onclick="window.close()" 
+        style="padding:10px 20px;background:#999;color:#fff;border:none;">
+        FECHAR
+      </button>
     </body>
     </html>
   `);
 
   janela.document.close();
-  janela.print();
 
-  setTimeout(() => {
-    this.submit(); // envia após imprimir
-  }, 1000);
+  // libera botão de envio definitivo
+  btnEnviar.classList.remove('hidden');
+  btnPrevia.classList.add('hidden');
 
 });
-  
+
+form.addEventListener('submit', function () {
+
+  const emailSolicitante = document.getElementById('emailSolicitante').value.trim();
+  const campoCC = document.querySelector('input[name="_cc"]');
+
+  if (emailSolicitante && !campoCC.value.includes(emailSolicitante)) {
+    campoCC.value += "," + emailSolicitante;
+  }
+
+  // evita duplo envio
+  btnEnviar.disabled = true;
+
+});
+
 </script>
 
 </body>
