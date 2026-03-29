@@ -141,6 +141,12 @@ button {
   <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
 </div>
 
+<div id="containerVagas"></div>
+
+<button type="button" onclick="adicionarVaga()">
+  + ADICIONAR VAGA
+</button>
+  
 <!-- POSTO -->
 <div class="field-group">
   <label>POSTO DE TRABALHO</label>
@@ -282,6 +288,68 @@ button {
 </form>
 </div>
 
+let contador = 0;
+
+function adicionarVaga() {
+  contador++;
+
+  const container = document.getElementById('containerVagas');
+
+  const bloco = document.createElement('div');
+  bloco.classList.add('vaga');
+
+  bloco.innerHTML = `
+    <h3 style="margin-top:30px;">VAGA ${contador}</h3>
+
+    <div class="field-group">
+      <label>POSTO DE TRABALHO</label>
+      <input type="text" name="POSTO[]">
+    </div>
+
+    <div class="field-group">
+      <label>CARGO</label>
+      <input type="text" name="CARGO[]">
+    </div>
+
+    <div class="field-row field-group">
+      <div>
+        <label>ESCALA</label>
+        <select name="ESCALA[]">
+          <option value="12X36">12X36</option>
+          <option value="5X2">5X2</option>
+        </select>
+      </div>
+
+      <div>
+        <label>ENTRADA</label>
+        <input type="time" name="ENTRADA[]">
+      </div>
+
+      <div>
+        <label>SAÍDA</label>
+        <input type="time" name="SAIDA[]">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>TIPO DE CONTRATAÇÃO</label>
+      <select name="TIPO[]">
+        <option>AUMENTO DE EFETIVO</option>
+        <option>SUBSTITUIÇÃO</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>MOTIVO</label>
+      <input type="text" name="MOTIVO[]">
+    </div>
+
+    <hr>
+  `;
+
+  container.appendChild(bloco);
+}
+  
 <script>
 /* CONVERSÃO AUTOMÁTICA PARA MAIÚSCULO */
 document.querySelectorAll('input[type="text"], textarea').forEach(el => {
