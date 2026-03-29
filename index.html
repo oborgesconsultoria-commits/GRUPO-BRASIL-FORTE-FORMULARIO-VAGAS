@@ -7,7 +7,6 @@
 <style>
 body {
   margin: 0;
-  padding: 0;
   background: #f2f4f7;
   font-family: Arial;
   text-transform: uppercase;
@@ -19,11 +18,13 @@ body {
   background: #fff;
   padding: 30px;
   border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 h1 {
   font-size: 22px;
-  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
 }
 
 .field-group { margin-bottom: 15px; }
@@ -35,41 +36,48 @@ h1 {
 
 .field-row > div { flex: 1; }
 
+label {
+  font-size: 13px;
+  font-weight: bold;
+}
+
 input, select {
   width: 100%;
   padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
-  margin-top: 20px;
   width: 100%;
   padding: 12px;
+  margin-top: 15px;
   background: #005baa;
-  color: #fff;
+  color: white;
   border: none;
+  cursor: pointer;
 }
 
 .hidden { display:none; }
+
+@media (max-width:700px){
+  .field-row { flex-direction:column; }
+}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
-<form id="formVaga"
-action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
-method="POST"
-enctype="multipart/form-data">
+<form id="formVaga" action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST">
 
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
-<!-- PROTOCOLO -->
 <div class="field-group">
 <label>PROTOCOLO</label>
 <input type="text" id="protocolo" name="PROTOCOLO" readonly>
 </div>
 
-<!-- SOLICITANTE -->
 <div class="field-group">
 <label>SOLICITANTE</label>
 <input type="text" name="SOLICITANTE" required>
@@ -80,38 +88,36 @@ enctype="multipart/form-data">
 <input type="email" id="emailSolicitante" name="EMAIL" required>
 </div>
 
-<div class="field-row field-group">
+<div class="field-row">
 <div>
 <label>DATA ABERTURA</label>
 <input type="date" id="dataAbertura" name="DATA ABERTURA">
 </div>
+
 <div>
-<label>DATA INÍCIO</label>
+<label>INÍCIO</label>
 <input type="date" id="dataPrevisao" name="DATA INICIO">
 </div>
 </div>
 
-<!-- VAGAS -->
 <div class="field-group">
-<label>QUANTIDADE DE VAGAS</label>
-<input type="number" min="1" required>
+<label>QUANTIDADE</label>
+<input type="number" id="qtd" min="1" required>
 </div>
 
 <div id="containerVagas"></div>
 
 <button type="button" onclick="adicionarVaga()">+ ADICIONAR VAGA</button>
 
-<!-- EMPRESA -->
 <div class="field-group">
 <label>EMPRESA</label>
-<div class="options">
-    <label><input type="radio" name="EMPRESA" value="AKVA MONITORAMENTO" required> AKVA MONITORAMENTO</label>
-    <label><input type="radio" name="EMPRESA" value="AKVA PROTECAO (HEFESTOR)"> AKVA PROTEÇÃO (HEFESTOR)</label>
-    <label><input type="radio" name="EMPRESA" value="AKVA TECNOLOGIA"> AKVA TECNOLOGIA</label>
-    <label><input type="radio" name="EMPRESA" value="ATRIA SERVICOS"> ATRIA SERVIÇOS</label>
-    <label><input type="radio" name="EMPRESA" value="BRASIL FORTE"> BRASIL FORTE</label>
-    <label><input type="radio" name="EMPRESA" value="VEGA SERVICOS"> VEGA SERVIÇOS</label>
-  </div>
+<select name="EMPRESA" required>
+<option value="">SELECIONE</option>
+<option>AKVA MONITORAMENTO</option>
+<option>HEFESTOR</option>
+<option>ATRIA</option>
+<option>BRASIL FORTE</option>
+</select>
 </div>
 
 <input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br">
@@ -125,67 +131,80 @@ enctype="multipart/form-data">
 
 <script>
 
-// PROTOCOLO + DATA
-(function () {
+/* PROTOCOLO */
+(function(){
   const hoje = new Date();
   const f = d => d.toISOString().split('T')[0];
 
-  document.getElementById('protocolo').value =
-    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
-
   document.getElementById('dataAbertura').value = f(hoje);
+  document.getElementById('protocolo').value =
+    "AV-" + f(hoje).replaceAll('-','') + "-" + Date.now().toString().slice(-4);
 })();
 
-// ADICIONAR VAGA
+/* MULTI VAGAS */
 let contador = 0;
 
-function adicionarVaga() {
+function adicionarVaga(){
   contador++;
 
-  const bloco = document.createElement('div');
+  const div = document.createElement('div');
 
-  bloco.innerHTML = `
+  div.innerHTML = `
     <h3>VAGA ${contador}</h3>
 
-    <input type="text" name="POSTO[]" placeholder="POSTO" required>
-    <input type="text" name="CARGO[]" placeholder="CARGO" required>
+    <div class="field-group">
+      <label>POSTO</label>
+      <input name="POSTO[]" required>
+    </div>
 
-    <select name="ESCALA[]" required>
-      <option value="">ESCALA</option>
-      <option>12X36</option>
-      <option>5X2</option>
-    </select>
+    <div class="field-group">
+      <label>CARGO</label>
+      <input name="CARGO[]" required>
+    </div>
 
-    <input type="time" name="ENTRADA[]" required>
-    <input type="time" name="SAIDA[]" required>
+    <div class="field-row">
+      <div>
+        <label>ESCALA</label>
+        <select name="ESCALA[]">
+          <option>12X36</option>
+          <option>5X2</option>
+        </select>
+      </div>
 
-    <select name="PORTAL[]" required>
-      <option value="">PORTAL?</option>
-      <option>SIM</option>
-      <option>NAO</option>
-    </select>
+      <div>
+        <label>ENTRADA</label>
+        <input type="time" name="ENTRADA[]">
+      </div>
 
-    <select name="TIPO[]" required>
-      <option value="">TIPO</option>
-      <option>AUMENTO</option>
-      <option>SUBSTITUIÇÃO</option>
-    </select>
+      <div>
+        <label>SAÍDA</label>
+        <input type="time" name="SAIDA[]">
+      </div>
+    </div>
 
-    <input type="text" name="MOTIVO[]" placeholder="MOTIVO">
+    <div class="field-group">
+      <label>TIPO</label>
+      <select name="TIPO[]">
+        <option>AUMENTO</option>
+        <option>SUBSTITUIÇÃO</option>
+      </select>
+    </div>
 
-    <input type="text" name="NOME_CANDIDATO[]" placeholder="CANDIDATO">
-    <input type="text" name="TEL[]" placeholder="TELEFONE">
+    <div class="field-group">
+      <label>MOTIVO</label>
+      <input name="MOTIVO[]">
+    </div>
 
     <hr>
   `;
 
-  document.getElementById('containerVagas').appendChild(bloco);
+  document.getElementById('containerVagas').appendChild(div);
 }
 
-// PRÉVIA
-document.getElementById('btnPrevia').addEventListener('click', function () {
+/* PRÉVIA */
+const form = document.getElementById('formVaga');
 
-  const form = document.getElementById('formVaga');
+document.getElementById('btnPrevia').onclick = () => {
 
   if (!form.checkValidity()) {
     form.reportValidity();
@@ -193,15 +212,13 @@ document.getElementById('btnPrevia').addEventListener('click', function () {
   }
 
   const data = new FormData(form);
-  let html = '';
+  let html = "";
 
-  for (let [k,v] of data.entries()) {
-    if (v) {
-      html += `<tr><td><b>${k}</b></td><td>${v}</td></tr>`;
-    }
+  for (let [k,v] of data.entries()){
+    if(v) html += `<tr><td>${k}</td><td>${v}</td></tr>`;
   }
 
-  const w = window.open('', '', 'width=800,height=600');
+  const w = window.open("");
 
   w.document.write(`
     <table border="1" style="width:100%">
@@ -210,10 +227,21 @@ document.getElementById('btnPrevia').addEventListener('click', function () {
   `);
 
   document.getElementById('btnEnviar').classList.remove('hidden');
-  this.classList.add('hidden');
+  document.getElementById('btnPrevia').classList.add('hidden');
+};
+
+/* ENVIO */
+form.addEventListener('submit', () => {
+
+  const email = document.getElementById('emailSolicitante').value;
+  const cc = document.querySelector('input[name="_cc"]');
+
+  if (!cc.value.includes(email)){
+    cc.value += "," + email;
+  }
+
 });
 
 </script>
-
 </body>
 </html>
