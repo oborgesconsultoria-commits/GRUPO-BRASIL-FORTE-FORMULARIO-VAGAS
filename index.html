@@ -31,13 +31,6 @@ h1 {
 
 .field-group { margin-bottom: 18px; }
 
-.field-row {
-  display: flex;
-  gap: 15px;
-}
-
-.field-row > div { flex: 1; }
-
 label {
   display: block;
   font-size: 13px;
@@ -50,43 +43,24 @@ input, select {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px;
-  text-transform: uppercase;
-}
-
-.options label {
-  font-weight: normal;
-  display: block;
-  margin-bottom: 6px;
 }
 
 button {
-  margin-top: 30px;
+  margin-top: 20px;
   width: 100%;
   padding: 12px;
   background: #005baa;
   color: #fff;
   border: none;
   border-radius: 4px;
-  font-size: 16px;
   cursor: pointer;
 }
 
 .hidden { display: none; }
 
-@media (max-width: 700px) {
-  .field-row { flex-direction: column; }
-}
-
 .logo {
   text-align: center;
   margin-bottom: 20px;
-}
-
-.logo img {
-  max-width: 260px;
-  width: 100%;
-  height: auto;
 }
 </style>
 </head>
@@ -95,86 +69,162 @@ button {
 <div class="wrapper">
 
 <div class="logo">
-  <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
+  <img src="assets/logoGBF.png" style="max-width:250px;">
 </div>
 
-<form
-  id="formVaga"
-  action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
-  method="POST"
-  enctype="multipart/form-data">
+<form id="formVaga"
+action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
+method="POST">
 
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
-<!-- BLOCO FIXO -->
-
-<div class="field-group">
-  <label>Nº DO PROTOCOLO</label>
-  <input type="text" id="protocolo" name="PROTOCOLO" readonly>
-</div>
-
-<div class="field-group">
-  <label>EMPRESA</label>
-  <select name="EMPRESA" required>
-    <option value="">SELECIONE</option>
-    <option value="AKVA MONITORAMENTO">AKVA MONITORAMENTO</option>
-    <option value="AKVA PROTECAO (HEFESTOR)">AKVA PROTEÇÃO (HEFESTOR)</option>
-    <option value="AKVA TECNOLOGIA">AKVA TECNOLOGIA</option>
-    <option value="ATRIA SERVICOS">ATRIA SERVIÇOS</option>
-    <option value="BRASIL FORTE">BRASIL FORTE</option>
-    <option value="VEGA SERVICOS">VEGA SERVIÇOS</option>
-  </select>
-</div>
-
-<div class="field-group">
-  <label>SOLICITANTE</label>
-  <input type="text" name="SOLICITANTE" required>
-</div>
-
-<div class="field-group">
-  <label>E-MAIL DO SOLICITANTE</label>
-  <input type="email" id="emailSolicitante" name="EMAIL DO SOLICITANTE" required>
-</div>
-
-<div class="field-group">
-  <label>DATA DA ABERTURA</label>
-  <input type="date" id="dataAbertura" name="DATA DA ABERTURA" readonly>
-</div>
-  
 <input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_subject" id="assuntoEmail">
 
-<button type="button" id="btnPrevia">GERAR PRÉVIA</button>
+<div class="field-group">
+<label>PROTOCOLO</label>
+<input type="text" id="protocolo" name="PROTOCOLO" readonly>
+</div>
+
+<div class="field-group">
+<label>SOLICITANTE</label>
+<input type="text" name="SOLICITANTE" required>
+</div>
+
+<div class="field-group">
+<label>E-MAIL</label>
+<input type="email" id="emailSolicitante" name="EMAIL" required>
+</div>
+
+<div class="field-group">
+<label>DATA ABERTURA</label>
+<input type="date" id="dataAbertura" name="DATA" readonly>
+</div>
+
+<div class="field-group">
+<label>QUANTIDADE DE VAGAS</label>
+<input type="number" id="qtd" min="1" required>
+</div>
+
+<div id="containerVagas"></div>
+
+<button type="button" onclick="preview()">GERAR PRÉVIA</button>
 <button type="submit">ENVIAR</button>
-  
+
 </form>
 </div>
 
 <script>
 
-// MAIÚSCULO AUTOMÁTICO
-document.querySelectorAll('input[type="text"]').forEach(el => {
-  el.addEventListener('input', () => {
-    el.value = el.value.toUpperCase();
-  });
-});
-
-// PROTOCOLO + DATA AUTOMÁTICA
+// DATA + PROTOCOLO
 (function () {
-  document.getElementById('assuntoEmail').value = 'ABERTURA DE VAGA';
-
   const hoje = new Date();
   const f = d => d.toISOString().split('T')[0];
 
-  document.getElementById('protocolo').value =
-    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
-
   document.getElementById('dataAbertura').value = f(hoje);
+  document.getElementById('protocolo').value =
+    `AV-${f(hoje).replaceAll('-','')}-${Math.floor(Math.random()*10000)}`;
+
+  document.getElementById('assuntoEmail').value = "ABERTURA DE VAGA";
 })();
 
+// GERAR VAGAS
+const qtd = document.getElementById('qtd');
+const container = document.getElementById('containerVagas');
+
+qtd.addEventListener('input', () => {
+
+  const n = parseInt(qtd.value) || 0;
+  container.innerHTML = "";
+
+  const min = new Date();
+  min.setDate(min.getDate() + 5);
+  const minDate = min.toISOString().split('T')[0];
+
+  for (let i = 1; i <= n; i++) {
+
+    const div = document.createElement('div');
+    div.classList.add('field-group');
+
+    div.innerHTML = `
+      <hr><h3>VAGA ${i}</h3>
+
+      <label>DATA INÍCIO</label>
+      <input type="date" name="DATA_${i}" min="${minDate}" required>
+
+      <label>POSTO</label>
+      <input type="text" name="POSTO_${i}" required>
+
+      <label>CARGO</label>
+      <input type="text" name="CARGO_${i}" required>
+
+      <label>ESCALA</label>
+      <select name="ESCALA_${i}" required>
+        <option></option>
+        <option>12X36</option>
+        <option>5X2</option>
+      </select>
+
+      <label>ENTRADA</label>
+      <input type="time" name="ENTRADA_${i}" required>
+
+      <label>SAÍDA</label>
+      <input type="time" name="SAIDA_${i}" required>
+
+      <label>PORTAL</label>
+      <select name="PORTAL_${i}" required>
+        <option></option>
+        <option>SIM</option>
+        <option>NÃO</option>
+      </select>
+
+      <label>TIPO</label>
+      <select onchange="tipo(this,${i})" name="TIPO_${i}" required>
+        <option></option>
+        <option>AUMENTO</option>
+        <option>FERIAS</option>
+        <option>SUBSTITUICAO</option>
+      </select>
+
+      <div id="extra_${i}" class="hidden">
+        <label>NOME SUB</label>
+        <input type="text" name="SUB_${i}">
+      </div>
+    `;
+
+    container.appendChild(div);
+  }
+
+});
+
+function tipo(el, i) {
+  const extra = document.getElementById(`extra_${i}`);
+  extra.classList.add('hidden');
+
+  if (el.value !== "AUMENTO") {
+    extra.classList.remove('hidden');
+  }
+}
+
+// PRÉVIA
+function preview() {
+  const form = document.getElementById('formVaga');
+  const data = new FormData(form);
+
+  let txt = "";
+
+  for (let [k,v] of data.entries()) {
+    if (!k.startsWith("_") && v) {
+      txt += k + ": " + v + "\n";
+    }
+  }
+
+  alert(txt);
+}
+
 </script>
-  
+
 </body>
 </html>
