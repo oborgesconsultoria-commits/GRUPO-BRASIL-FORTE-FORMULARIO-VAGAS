@@ -72,7 +72,6 @@ button {
   padding-top: 20px;
 }
 
-/* ✅ LOGO (única adição) */
 .logo {
   text-align: center;
   margin-bottom: 20px;
@@ -80,8 +79,6 @@ button {
 
 .logo img {
   max-width: 260px;
-  width: 100%;
-  height: auto;
 }
 </style>
 </head>
@@ -89,18 +86,23 @@ button {
 <body>
 <div class="wrapper">
 
-<!-- ✅ LOGO INSERIDA -->
 <div class="logo">
-  <img src="assets/logoGBF.png" alt="Logo Grupo Brasil Forte">
+  <img src="assets/logoGBF.png">
 </div>
 
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
 <form action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST" enctype="multipart/form-data">
 
+<!-- BLOCO FIXO -->
 <div class="field-group">
 <label>Nº DO PROTOCOLO</label>
 <input type="text" id="protocolo" name="PROTOCOLO" readonly>
+</div>
+
+<div class="field-group">
+<label>DATA DA ABERTURA</label>
+<input type="date" id="dataAbertura" name="DATA_ABERTURA" readonly>
 </div>
 
 <div class="field-group">
@@ -143,7 +145,7 @@ button {
 
 let vagaCount = 0;
 
-// PROTOCOLO
+// ===== DATA + PROTOCOLO =====
 (function () {
   const hoje = new Date();
   const f = d => d.toISOString().split('T')[0];
@@ -151,26 +153,33 @@ let vagaCount = 0;
   const protocolo = `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
   document.getElementById('protocolo').value = protocolo;
 
-  document.getElementById('assuntoEmail').value = `FORMULÁRIO DE ABERTURA DE VAGAS - ${protocolo}`;
+  document.getElementById('dataAbertura').value = f(hoje);
+
+  document.getElementById('assuntoEmail').value =
+    `FORMULÁRIO DE ABERTURA DE VAGAS - ${protocolo}`;
 })();
 
-// ASSUNTO DINÂMICO
-const empresaSelect = document.getElementById('empresaSelect');
-const assuntoEmail = document.getElementById('assuntoEmail');
-
+// ===== ASSUNTO DINÂMICO =====
 empresaSelect.addEventListener('change', function () {
   const protocolo = document.getElementById('protocolo').value;
-
   if (this.value) {
-    assuntoEmail.value = `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value} | ${protocolo}`;
+    assuntoEmail.value =
+      `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value} | ${protocolo}`;
   }
 });
 
-// ADICIONAR VAGA
+// ===== DATA +5 DIAS =====
+function getDataMinima() {
+  const dataAbertura = new Date(document.getElementById('dataAbertura').value);
+  dataAbertura.setDate(dataAbertura.getDate() + 5);
+  return dataAbertura.toISOString().split('T')[0];
+}
+
+// ===== ADICIONAR VAGA =====
 function addVaga() {
   vagaCount++;
 
-  const container = document.getElementById('vagasContainer');
+  const dataMin = getDataMinima();
 
   const div = document.createElement('div');
   div.className = 'vaga-box';
@@ -188,28 +197,9 @@ function addVaga() {
     <input type="text" name="CARGO_${vagaCount}" required>
   </div>
 
-  <div class="field-row field-group">
-    <div>
-      <label>ESCALA</label>
-      <select name="ESCALA_${vagaCount}" required>
-        <option value="">SELECIONE</option>
-        <option>12X36</option>
-        <option>5X2</option>
-        <option>6X1</option>
-        <option>5X1</option>
-        <option>INTERMITENTE</option>
-      </select>
-    </div>
-
-    <div>
-      <label>ENTRADA</label>
-      <input type="time" name="ENTRADA_${vagaCount}" required>
-    </div>
-
-    <div>
-      <label>SAÍDA</label>
-      <input type="time" name="SAIDA_${vagaCount}" required>
-    </div>
+  <div class="field-group">
+    <label>DATA PREVISTA DE INÍCIO</label>
+    <input type="date" name="INICIO_${vagaCount}" min="${dataMin}" value="${dataMin}" required>
   </div>
 
   <div class="field-group">
@@ -260,10 +250,10 @@ function addVaga() {
   </div>
   `;
 
-  container.appendChild(div);
+  document.getElementById('vagasContainer').appendChild(div);
 }
 
-// REMOVER VAGA
+// ===== REMOVER VAGA =====
 function removeVaga() {
   const container = document.getElementById('vagasContainer');
 
@@ -276,9 +266,11 @@ function removeVaga() {
   vagaCount--;
 }
 
-// DINÂMICA DE TIPO
+// ===== DINÂMICA DE TIPO =====
 function tipoChange(el, id) {
   const extra = document.getElementById('extra_' + id);
+  const dataMin = getDataMinima();
+
   extra.innerHTML = '';
 
   if (el.value === 'AUMENTO DE EFETIVO' || el.value === 'INTERMITENTE') {
@@ -297,11 +289,11 @@ function tipoChange(el, id) {
     </div>
     <div class="field-row field-group">
       <div>
-        <label>INÍCIO</label>
-        <input type="date" name="INI_${id}">
+        <label>INÍCIO COBERTURA</label>
+        <input type="date" name="INI_${id}" min="${dataMin}" value="${dataMin}" required>
       </div>
       <div>
-        <label>FIM</label>
+        <label>FIM COBERTURA</label>
         <input type="date" name="FIM_${id}">
       </div>
     </div>`;
@@ -315,7 +307,7 @@ function tipoChange(el, id) {
     </div>
     <div class="field-group">
       <label>INÍCIO PREVISTO</label>
-      <input type="date" name="INI_${id}">
+      <input type="date" name="INI_${id}" min="${dataMin}" value="${dataMin}" required>
     </div>`;
   }
 
@@ -324,6 +316,10 @@ function tipoChange(el, id) {
     <div class="field-group">
       <label>NOME DO SUBSTITUÍDO</label>
       <input type="text" name="SUB_${id}">
+    </div>
+    <div class="field-group">
+      <label>DATA INÍCIO</label>
+      <input type="date" name="INI_${id}" min="${dataMin}" value="${dataMin}" required>
     </div>`;
   }
 }
