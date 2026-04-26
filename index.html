@@ -99,6 +99,7 @@ button {
 <div id="vagasContainer"></div>
 
 <button type="button" onclick="addVaga()">+ ADICIONAR VAGA</button>
+<button type="button" onclick="removeVaga()">- REMOVER ÚLTIMA VAGA</button>
 
 <input type="hidden" name="_captcha" value="false">
 
@@ -207,6 +208,18 @@ function addVaga() {
   container.appendChild(div);
 }
 
+function removeVaga() {
+  const container = document.getElementById('vagasContainer');
+
+  if (vagaCount <= 1) {
+    alert('PELO MENOS UMA VAGA DEVE EXISTIR');
+    return;
+  }
+
+  container.removeChild(container.lastElementChild);
+  vagaCount--;
+}
+
 function tipoChange(el, id) {
   const extra = document.getElementById('extra_' + id);
   extra.innerHTML = '';
@@ -267,7 +280,7 @@ function tipoChange(el, id) {
     `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
 })();
 
-// cria primeira vaga automática
+// cria primeira vaga automaticamente
 addVaga();
 
 </script>
