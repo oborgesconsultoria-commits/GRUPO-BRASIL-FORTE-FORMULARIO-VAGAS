@@ -91,7 +91,7 @@ button {
 
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
-<form id="formVaga" action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST">
+<form id="formVaga" action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST" enctype="multipart/form-data">
 
 <!-- BLOCO FIXO -->
 <div class="field-group">
@@ -147,29 +147,33 @@ button {
 
 let vagaCount = 0;
 
-// DATA + PROTOCOLO
+/* =========================
+   PROTOCOLO + DATA FIXA
+========================= */
 (function () {
   const hoje = new Date();
   const f = d => d.toISOString().split('T')[0];
 
   document.getElementById('dataAbertura').value = f(hoje);
 
-  const protocolo = `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
-  document.getElementById('protocolo').value = protocolo;
+  document.getElementById('protocolo').value =
+    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
 
   document.getElementById('assuntoEmail').value =
-    `FORMULÁRIO DE ABERTURA DE VAGAS - ${protocolo}`;
+    `FORMULÁRIO DE ABERTURA DE VAGAS`;
 })();
 
-// ASSUNTO DINÂMICO
+/* =========================
+   ASSUNTO DINÂMICO
+========================= */
 document.getElementById("empresaSelect").addEventListener("change", function(){
-  const protocolo = document.getElementById("protocolo").value;
-
   document.getElementById("assuntoEmail").value =
-    `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value} | ${protocolo}`;
+    `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value}`;
 });
 
-// MÁSCARA TELEFONE
+/* =========================
+   MÁSCARA TELEFONE
+========================= */
 function mascaraTelefone(el) {
   let v = el.value.replace(/\D/g, '');
   if (v.length > 11) v = v.slice(0,11);
@@ -183,13 +187,16 @@ function mascaraTelefone(el) {
   }
 }
 
-// ADICIONAR VAGA
+/* =========================
+   ADICIONAR VAGA
+========================= */
 function addVaga() {
   vagaCount++;
 
   const hoje = new Date();
-  hoje.setDate(hoje.getDate() + 5);
-  const minDate = hoje.toISOString().split('T')[0];
+  const min = new Date();
+  min.setDate(hoje.getDate() + 5);
+  const minDate = min.toISOString().split('T')[0];
 
   const div = document.createElement("div");
   div.className = "vaga-box";
@@ -203,7 +210,7 @@ function addVaga() {
   </div>
 
   <div class="field-group">
-    <label>POSTO DE TRABALHO</label>
+    <label>POSTO</label>
     <input type="text" name="POSTO_${vagaCount}" required>
   </div>
 
@@ -213,9 +220,8 @@ function addVaga() {
   </div>
 
   <div class="field-group">
-    <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
+    <label>PORTAL</label>
     <select name="PORTAL_${vagaCount}" required>
-      <option value="">SELECIONE</option>
       <option>SIM</option>
       <option>NÃO</option>
     </select>
@@ -236,24 +242,23 @@ function addVaga() {
   <div id="extra_${vagaCount}"></div>
 
   <div class="field-group">
-    <label>ANEXAR CURRÍCULO</label>
+    <label>CURRÍCULO</label>
     <input type="file" name="CURRICULO_${vagaCount}">
   </div>
 
   <div class="field-group">
-    <label>NOME DO CANDIDATO</label>
+    <label>NOME CANDIDATO</label>
     <input type="text" name="CANDIDATO_${vagaCount}">
   </div>
 
   <div class="field-group">
     <label>TELEFONE</label>
-    <input type="text" name="TEL_${vagaCount}" oninput="mascaraTelefone(this)" maxlength="15">
+    <input type="text" name="TEL_${vagaCount}" oninput="mascaraTelefone(this)">
   </div>
 
   <div class="field-group">
-    <label>POSSUI WHATSAPP?</label>
+    <label>WHATSAPP</label>
     <select name="WPP_${vagaCount}">
-      <option value="">SELECIONE</option>
       <option>SIM</option>
       <option>NÃO</option>
     </select>
@@ -263,149 +268,125 @@ function addVaga() {
   document.getElementById("vagasContainer").appendChild(div);
 }
 
-// REMOVER
+/* =========================
+   REMOVER VAGA
+========================= */
 function removeVaga() {
-  if (vagaCount <= 1) {
-    alert("PELO MENOS UMA VAGA DEVE EXISTIR");
-    return;
-  }
+  if (vagaCount <= 1) return alert("MÍNIMO 1 VAGA");
+
   document.getElementById("vagasContainer").lastChild.remove();
   vagaCount--;
 }
 
-// DINÂMICA
-function tipoChange(select, id) {
+/* =========================
+   DINÂMICA DE TIPO
+========================= */
+function tipoChange(el, id) {
   const div = document.getElementById("extra_" + id);
   div.innerHTML = "";
 
-  if (select.value === "AUMENTO DE EFETIVO") {
+  const hoje = new Date();
+  const min = new Date();
+  min.setDate(hoje.getDate() + 5);
+  const minDate = min.toISOString().split('T')[0];
+
+  if (el.value === "AUMENTO DE EFETIVO") {
     div.innerHTML = `
       <div class="field-group">
-        <label>QUANTIDADE DE VAGAS</label>
+        <label>QUANTIDADE</label>
         <input type="number" name="QTD_${id}">
       </div>
       <div class="field-group">
-        <label>MOTIVO / JUSTIFICATIVA</label>
+        <label>MOTIVO</label>
         <input type="text" name="MOTIVO_${id}">
       </div>`;
   }
 
-  if (select.value === "INTERMITENTE") {
+  if (el.value === "COBERTURA DE FERIAS") {
     div.innerHTML = `
       <div class="field-group">
-        <label>MOTIVO / JUSTIFICATIVA</label>
-        <input type="text" name="MOTIVO_${id}">
-      </div>`;
-  }
-
-  if (select.value === "COBERTURA DE FERIAS") {
-    const hoje = new Date();
-    hoje.setDate(hoje.getDate() + 5);
-    const minDate = hoje.toISOString().split('T')[0];
-
-    div.innerHTML = `
-      <div class="field-group">
-        <label>NOME DO COLABORADOR</label>
+        <label>NOME SUBSTITUÍDO</label>
         <input type="text" name="NOME_${id}">
       </div>
       <div class="field-row field-group">
         <div>
-          <label>DATA INÍCIO</label>
-          <input type="date" name="INI_${id}" value="${minDate}" min="${minDate}">
+          <label>INÍCIO</label>
+          <input type="date" name="INI_${id}" value="${minDate}">
         </div>
         <div>
-          <label>DATA FIM</label>
+          <label>FIM</label>
           <input type="date" name="FIM_${id}">
         </div>
       </div>`;
   }
 
-  if (select.value === "LICENCA MEDICA") {
-    const hoje = new Date();
-    hoje.setDate(hoje.getDate() + 5);
-    const minDate = hoje.toISOString().split('T')[0];
-
+  if (el.value === "LICENCA MEDICA") {
     div.innerHTML = `
       <div class="field-group">
-        <label>NOME DO COLABORADOR</label>
+        <label>NOME</label>
         <input type="text" name="NOME_${id}">
       </div>
       <div class="field-group">
-        <label>DATA INÍCIO</label>
-        <input type="date" name="INI_${id}" value="${minDate}" min="${minDate}">
+        <label>INÍCIO</label>
+        <input type="date" name="INI_${id}" value="${minDate}">
       </div>`;
   }
 
-  if (select.value === "SUBSTITUICAO") {
+  if (el.value === "INTERMITENTE") {
     div.innerHTML = `
       <div class="field-group">
-        <label>NOME DO SUBSTITUÍDO</label>
+        <label>MOTIVO</label>
+        <input type="text" name="MOTIVO_${id}">
+      </div>`;
+  }
+
+  if (el.value === "SUBSTITUICAO") {
+    div.innerHTML = `
+      <div class="field-group">
+        <label>SUBSTITUÍDO</label>
         <input type="text" name="SUB_${id}">
       </div>`;
   }
 }
 
-// PRÉVIA PROFISSIONAL
+/* =========================
+   PRÉVIA
+========================= */
 function gerarPrevia() {
-
   const form = document.getElementById("formVaga");
-  const formData = new FormData(form);
+  const data = new FormData(form);
 
-  let conteudo = "";
+  let rows = "";
 
-  const destinatarios = `
-  <tr>
-    <td style="padding:6px;border:1px solid #ccc;font-weight:bold;">
-      DESTINATÁRIOS
-    </td>
-    <td style="padding:6px;border:1px solid #ccc;">
-      PARA: mayara.dantas@grupobrasilforte.com.br <br>
-      CC: allan.borges@grupobrasilforte.com.br, maria.fernanda@grupobrasilforte.com.br <br>
-      SOLICITANTE: ${form.querySelector('input[name="EMAIL"]').value}
-    </td>
-  </tr>
-  `;
-
-  for (let [k, v] of formData.entries()) {
+  for (let [k,v] of data.entries()) {
     if (!v || v instanceof File) continue;
 
-    conteudo += `
+    rows += `
     <tr>
-      <td style="padding:6px;border:1px solid #ccc;font-weight:bold;">
-        ${k.replaceAll("_"," ")}
-      </td>
-      <td style="padding:6px;border:1px solid #ccc;">
-        ${v}
-      </td>
+      <td style="border:1px solid #ccc;padding:6px;font-weight:bold;">${k}</td>
+      <td style="border:1px solid #ccc;padding:6px;">${v}</td>
     </tr>`;
   }
 
-  const janela = window.open('', '', 'width=900,height=800');
+  const win = window.open("", "", "width=900,height=700");
 
-  janela.document.write(`
-    <html>
-    <head>
-      <title>PRÉVIA – ABERTURA DE VAGA</title>
-    </head>
-    <body style="font-family:Arial;padding:30px;">
-      <h2 style="text-align:center;">PRÉVIA – FORMULÁRIO DE ABERTURA DE VAGA</h2>
-      <table style="width:100%;border-collapse:collapse;">
-        ${destinatarios}
-        ${conteudo}
-      </table>
-      <br><br>
-      <button onclick="window.close()" 
-        style="padding:10px 20px;background:#999;color:#fff;border:none;">
-        FECHAR
-      </button>
-    </body>
-    </html>
+  win.document.write(`
+  <html>
+  <body style="font-family:Arial;padding:20px">
+    <h2>PRÉVIA - FORMULÁRIO</h2>
+    <table style="width:100%;border-collapse:collapse">
+      ${rows}
+    </table>
+    <br>
+    <button onclick="window.close()">FECHAR</button>
+  </body>
+  </html>
   `);
 
-  janela.document.close();
+  win.document.close();
 }
 
-// inicia com 1 vaga
+/* inicia */
 addVaga();
 
 </script>
