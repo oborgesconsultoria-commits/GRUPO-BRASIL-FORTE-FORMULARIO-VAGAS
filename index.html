@@ -54,8 +54,14 @@ input, select {
   text-transform: uppercase;
 }
 
+.options label {
+  font-weight: normal;
+  display: block;
+  margin-bottom: 6px;
+}
+
 button {
-  margin-top: 20px;
+  margin-top: 30px;
   width: 100%;
   padding: 12px;
   background: #005baa;
@@ -66,18 +72,21 @@ button {
   cursor: pointer;
 }
 
-.vaga-box {
-  border-top: 2px dashed #ccc;
-  margin-top: 30px;
-  padding-top: 20px;
+.hidden { display: none; }
+
+@media (max-width: 700px) {
+  .field-row { flex-direction: column; }
 }
 
 .logo {
   text-align: center;
   margin-bottom: 20px;
 }
+
 .logo img {
   max-width: 260px;
+  width: 100%;
+  height: auto;
 }
 </style>
 </head>
@@ -86,308 +95,417 @@ button {
 <div class="wrapper">
 
 <div class="logo">
-  <img src="assets/logoGBF.png" alt="Logo">
+  <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
 </div>
+
+<form
+  id="formVaga"
+  action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
+  method="POST"
+  enctype="multipart/form-data">
 
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
-<form id="formVaga" action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST" enctype="multipart/form-data">
-
-<!-- BLOCO FIXO -->
 <div class="field-group">
-<label>Nº DO PROTOCOLO</label>
-<input type="text" id="protocolo" name="PROTOCOLO" readonly>
+  <label>Nº DO PROTOCOLO</label>
+  <input type="text" id="protocolo" name="PROTOCOLO" readonly>
+</div>
+
+<!-- SOLICITANTE -->
+<div class="field-group">
+  <label>SOLICITANTE</label>
+  <input type="text" name="SOLICITANTE" required>
+</div>
+
+  <!-- E-MAIL DO SOLICITANTE -->
+<div class="field-group">
+  <label>E-MAIL DO SOLICITANTE</label>
+  <input type="email" id="emailSolicitante" name="EMAIL DO SOLICITANTE" required>
+</div>
+
+<!-- DATAS -->
+<div class="field-row field-group">
+  <div>
+    <label>DATA DA ABERTURA</label>
+    <input type="date" id="dataAbertura" name="DATA DA ABERTURA" required>
+  </div>
+  <div>
+    <label>DATA PREVISTA DE INÍCIO</label>
+    <input type="date" id="dataPrevisao" name="DATA PREVISTA DE INICIO" required>
+  </div>
+</div>
+
+<!-- QUANTIDADE -->
+<div class="field-group">
+  <label>QUANTIDADE DE VAGAS</label>
+  <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
+</div>
+
+<!-- POSTO -->
+<div class="field-group">
+  <label>POSTO DE TRABALHO</label>
+  <input type="text" name="POSTO DE TRABALHO" required>
+</div>
+
+<!-- CARGO -->
+<div class="field-group">
+  <label>CARGO</label>
+  <input type="text" name="CARGO" required>
+</div>
+
+<div class="field-row field-group">
+  <div>
+    <label>ESCALA</label>
+    <select name="ESCALA" id="escala" required>
+      <option value="">SELECIONE</option>
+      <option value="12X36">12X36</option>
+      <option value="5X2">5X2</option>
+      <option value="6X1">6X1</option>
+      <option value="5X1">5X1</option>
+      <option value="INTERMITENTE">INTERMITENTE</option>
+    </select>
+  </div>
+  <div>
+    <label>HORÁRIO – ENTRADA</label>
+    <input type="time" id="horaEntrada" name="HORARIO ENTRADA" required>
+  </div>
+  <div>
+    <label>HORÁRIO – SAÍDA</label>
+    <input type="time" id="horaSaida" name="HORARIO SAIDA" required>
+  </div>
 </div>
 
 <div class="field-group">
-<label>DATA DE ABERTURA</label>
-<input type="date" id="dataAbertura" name="DATA_ABERTURA" readonly>
+  <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
+  <div class="options" style="display:flex; gap:30px;">
+    <label><input type="checkbox" id="portalSim" name="CADASTRAMENTO PREVIO EM PORTAL" value="SIM"> SIM</label>
+    <label><input type="checkbox" id="portalNao" name="CADASTRAMENTO PREVIO EM PORTAL" value="NÃO"> NÃO</label>
+  </div>
 </div>
 
 <div class="field-group">
-<label>DISPONIBILIZAÇÃO DA VAGA NA EMPRESA</label>
-<select name="EMPRESA" id="empresaSelect" required>
-<option value="">SELECIONE</option>
-<option>AKVA MONITORAMENTO</option>
-<option>AKVA PROTECAO (HEFESTOR)</option>
-<option>AKVA TECNOLOGIA</option>
-<option>ATRIA SERVICOS</option>
-<option>BRASIL FORTE</option>
-<option>VEGA SERVICOS</option>
-</select>
+  <label>TIPO DE CONTRATAÇÃO</label>
+  <div class="options">
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="AUMENTO DE EFETIVO" required> AUMENTO DE EFETIVO</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="COBERTURA DE FERIAS"> COBERTURA DE FÉRIAS</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="INTERMITENTE"> INTERMITENTE</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="LICENCA MEDICA"> LICENÇA MÉDICA</label>
+    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="SUBSTITUICAO"> SUBSTITUIÇÃO</label>
+  </div>
+</div>
+
+<div id="motivoGroup" class="field-group hidden">
+  <label id="motivoLabel"></label>
+  <input type="text" id="motivoInput" name="MOTIVO">
+</div>
+
+<div id="subnivel" class="hidden">
+
+  <div class="field-row field-group">
+    <div>
+      <label>NOME DO COLABORADOR SUBSTITUÍDO</label>
+      <input type="text" id="nomeSub" name="NOME COLABORADOR SUBSTITUIDO">
+    </div>
+    <div>
+      <label>MATRÍCULA DO COLABORADOR SUBSTITUÍDO</label>
+      <input type="text" id="matSub" name="MATRICULA COLABORADOR SUBSTITUIDO">
+    </div>
+  </div>
+
+  <div id="feriasDatas" class="field-row field-group hidden">
+    <div>
+      <label>DATA INÍCIO COBERTURA</label>
+      <input type="date" id="iniFerias" name="DATA INICIO COBERTURA">
+    </div>
+    <div>
+      <label>DATA FINAL COBERTURA</label>
+      <input type="date" id="fimFerias" name="DATA FINAL COBERTURA">
+    </div>
+  </div>
+
 </div>
 
 <div class="field-group">
-<label>SOLICITANTE</label>
-<input type="text" name="SOLICITANTE" required>
+  <label>EMPRESA</label>
+  <div class="options">
+    <label><input type="radio" name="EMPRESA" value="AKVA MONITORAMENTO" required> AKVA MONITORAMENTO</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA PROTECAO (HEFESTOR)"> AKVA PROTEÇÃO (HEFESTOR)</label>
+    <label><input type="radio" name="EMPRESA" value="AKVA TECNOLOGIA"> AKVA TECNOLOGIA</label>
+    <label><input type="radio" name="EMPRESA" value="ATRIA SERVICOS"> ATRIA SERVIÇOS</label>
+    <label><input type="radio" name="EMPRESA" value="BRASIL FORTE"> BRASIL FORTE</label>
+    <label><input type="radio" name="EMPRESA" value="VEGA SERVICOS"> VEGA SERVIÇOS</label>
+  </div>
 </div>
 
 <div class="field-group">
-<label>E-MAIL</label>
-<input type="email" name="EMAIL" required>
+  <label>ANEXAR CURRÍCULOS (SE HOUVER)</label>
+  <input type="file" name="CURRICULOS">
 </div>
 
-<!-- VAGAS -->
-<div id="vagasContainer"></div>
+<!-- BLOCO CANDIDATO -->
+<div class="field-group">
+  <label>NOME DO CANDIDATO</label>
+  <input type="text" id="nomeCandidato" name="NOME DO CANDIDATO">
+</div>
 
-<button type="button" onclick="addVaga()">+ ADICIONAR VAGA</button>
-<button type="button" onclick="removeVaga()">- REMOVER ÚLTIMA VAGA</button>
+<div class="field-group">
+  <label>TELEFONE DO CANDIDATO</label>
+  <input type="text" id="telefoneCandidato" name="TELEFONE DO CANDIDATO" maxlength="15">
+</div>
 
-<button type="button" onclick="gerarPrevia()">GERAR PRÉVIA</button>
 
+<div class="field-group">
+  <label>NÚMERO POSSUI WHATSAPP?</label>
+  <div class="options" style="display:flex; gap:30px;">
+    
+    <label>
+      <input type="radio" name="possui_whatsapp" value="SIM" required>
+      SIM
+    </label>
+
+    <label>
+      <input type="radio" name="possui_whatsapp" value="NAO">
+      NÃO
+    </label>
+
+  </div>
+</div>
+  
+<input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br">
 <input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_template" value="table">
 <input type="hidden" name="_subject" id="assuntoEmail">
 
-<button type="submit">ENVIAR</button>
-
+<button type="button" id="btnPrevia">GERAR PRÉVIA</button>
+<button type="submit" id="btnEnviar" class="hidden">ENVIAR DEFINITIVO</button>
+  
 </form>
 </div>
 
 <script>
+/* CONVERSÃO AUTOMÁTICA PARA MAIÚSCULO */
+document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+  el.addEventListener('input', () => {
+    el.value = el.value.toUpperCase();
+  });
+});
 
-let vagaCount = 0;
+/* JS ORIGINAL */
 
-/* =========================
-   PROTOCOLO + DATA FIXA
-========================= */
+// Datas e protocolo
 (function () {
   const hoje = new Date();
+  const min = new Date();
+  min.setDate(hoje.getDate() + 5);
   const f = d => d.toISOString().split('T')[0];
-
-  document.getElementById('dataAbertura').value = f(hoje);
 
   document.getElementById('protocolo').value =
     `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
 
-  document.getElementById('assuntoEmail').value =
-    `FORMULÁRIO DE ABERTURA DE VAGAS`;
+  document.getElementById('dataAbertura').value = f(hoje);
+  document.getElementById('dataPrevisao').min = f(min);
+  document.getElementById('dataPrevisao').value = f(min);
 })();
 
-/* =========================
-   ASSUNTO DINÂMICO
-========================= */
-document.getElementById("empresaSelect").addEventListener("change", function(){
-  document.getElementById("assuntoEmail").value =
-    `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value}`;
+// Checkbox SIM / NÃO
+const portalSim = document.getElementById('portalSim');
+const portalNao = document.getElementById('portalNao');
+
+portalSim.addEventListener('change', () => {
+  if (portalSim.checked) portalNao.checked = false;
+});
+portalNao.addEventListener('change', () => {
+  if (portalNao.checked) portalSim.checked = false;
 });
 
-/* =========================
-   MÁSCARA TELEFONE
-========================= */
-function mascaraTelefone(el) {
-  let v = el.value.replace(/\D/g, '');
-  if (v.length > 11) v = v.slice(0,11);
-
-  if (v.length > 6) {
-    el.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
-  } else if (v.length > 2) {
-    el.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
-  } else {
-    el.value = v;
+document.getElementById('formVaga').addEventListener('submit', function (e) {
+  if (!portalSim.checked && !portalNao.checked) {
+    alert('SELECIONE SIM OU NÃO EM "CADASTRAMENTO PRÉVIO EM PORTAL"');
+    e.preventDefault();
   }
+});
+
+// Tipo de contratação
+const radios = document.querySelectorAll('input[name="TIPO DE CONTRATAÇÃO"]');
+const sub = document.getElementById('subnivel');
+const ferias = document.getElementById('feriasDatas');
+const nome = document.getElementById('nomeSub');
+const mat = document.getElementById('matSub');
+const ini = document.getElementById('iniFerias');
+const fim = document.getElementById('fimFerias');
+const assunto = document.getElementById('assuntoEmail');
+const motivoGroup = document.getElementById('motivoGroup');
+const motivoLabel = document.getElementById('motivoLabel');
+const motivoInput = document.getElementById('motivoInput');
+
+radios.forEach(r => {
+  r.addEventListener('change', () => {
+    sub.classList.add('hidden');
+    ferias.classList.add('hidden');
+    motivoGroup.classList.add('hidden');
+    motivoInput.required = false;
+    nome.required = mat.required = false;
+    ini.required = false;
+
+    assunto.value = `ABERTURA DE VAGA – ${r.value}`;
+
+    if (!['COBERTURA DE FERIAS','LICENCA MEDICA'].includes(r.value)) {
+      motivoGroup.classList.remove('hidden');
+      motivoInput.required = true;
+      const prep = r.value.endsWith('AO') ? 'DA' : 'DO';
+      motivoLabel.innerText = `MOTIVO ${prep} ${r.value}`;
+    }
+
+    if (['SUBSTITUICAO','COBERTURA DE FERIAS','LICENCA MEDICA'].includes(r.value)) {
+      sub.classList.remove('hidden');
+      nome.required = mat.required = true;
+    }
+
+    if (r.value === 'COBERTURA DE FERIAS') {
+      ferias.classList.remove('hidden');
+      ini.required = true;
+    }
+  });
+});
+
+// Validação 12x36
+const entrada = document.getElementById('horaEntrada');
+const saida = document.getElementById('horaSaida');
+const escala = document.getElementById('escala');
+
+saida.addEventListener('change', () => {
+  if (!entrada.value || !saida.value) return;
+
+  const toMinutes = t => {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+  };
+
+  let iniMin = toMinutes(entrada.value);
+  let fimMin = toMinutes(saida.value);
+  if (fimMin <= iniMin) fimMin += 1440;
+
+  if (escala.value === '12X36' && (fimMin - iniMin) < 11 * 60) {
+    alert('ESCALA 12X36 DEVE TER APROXIMADAMENTE 12 HORAS');
+    saida.value = '';
+  }
+});
+
+// Datas férias
+fim.addEventListener('change', () => {
+  if (fim.value && ini.value && fim.value <= ini.value) {
+    alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
+    fim.value = '';
+  }
+});
+
+/* MÁSCARA TELEFONE CANDIDATO */
+const tel = document.getElementById('telefoneCandidato');
+
+if (tel) {
+  tel.addEventListener('input', function () {
+    let v = tel.value.replace(/\D/g, '');
+    if (v.length > 11) v = v.slice(0, 11);
+
+    if (v.length > 6)
+      tel.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+    else if (v.length > 2)
+      tel.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
+    else
+      tel.value = v;
+  });
 }
 
-/* =========================
-   ADICIONAR VAGA
-========================= */
-function addVaga() {
-  vagaCount++;
+/* ===== PRÉVIA + ENVIO DEFINITIVO ===== */
 
-  const hoje = new Date();
-  const min = new Date();
-  min.setDate(hoje.getDate() + 5);
-  const minDate = min.toISOString().split('T')[0];
+const form = document.getElementById('formVaga');
+const btnPrevia = document.getElementById('btnPrevia');
+const btnEnviar = document.getElementById('btnEnviar');
 
-  const div = document.createElement("div");
-  div.className = "vaga-box";
+btnPrevia.addEventListener('click', function () {
 
-  div.innerHTML = `
-  <h3>VAGA ${String(vagaCount).padStart(2,'0')}</h3>
-
-  <div class="field-group">
-    <label>DATA INÍCIO</label>
-    <input type="date" name="INICIO_${vagaCount}" value="${minDate}" min="${minDate}" required>
-  </div>
-
-  <div class="field-group">
-    <label>POSTO</label>
-    <input type="text" name="POSTO_${vagaCount}" required>
-  </div>
-
-  <div class="field-group">
-    <label>CARGO</label>
-    <input type="text" name="CARGO_${vagaCount}" required>
-  </div>
-
-  <div class="field-group">
-    <label>PORTAL</label>
-    <select name="PORTAL_${vagaCount}" required>
-      <option>SIM</option>
-      <option>NÃO</option>
-    </select>
-  </div>
-
-  <div class="field-group">
-    <label>TIPO DE CONTRATAÇÃO</label>
-    <select onchange="tipoChange(this, ${vagaCount})" name="TIPO_${vagaCount}" required>
-      <option value="">SELECIONE</option>
-      <option>AUMENTO DE EFETIVO</option>
-      <option>COBERTURA DE FERIAS</option>
-      <option>INTERMITENTE</option>
-      <option>LICENCA MEDICA</option>
-      <option>SUBSTITUICAO</option>
-    </select>
-  </div>
-
-  <div id="extra_${vagaCount}"></div>
-
-  <div class="field-group">
-    <label>CURRÍCULO</label>
-    <input type="file" name="CURRICULO_${vagaCount}">
-  </div>
-
-  <div class="field-group">
-    <label>NOME CANDIDATO</label>
-    <input type="text" name="CANDIDATO_${vagaCount}">
-  </div>
-
-  <div class="field-group">
-    <label>TELEFONE</label>
-    <input type="text" name="TEL_${vagaCount}" oninput="mascaraTelefone(this)">
-  </div>
-
-  <div class="field-group">
-    <label>WHATSAPP</label>
-    <select name="WPP_${vagaCount}">
-      <option>SIM</option>
-      <option>NÃO</option>
-    </select>
-  </div>
-  `;
-
-  document.getElementById("vagasContainer").appendChild(div);
-}
-
-/* =========================
-   REMOVER VAGA
-========================= */
-function removeVaga() {
-  if (vagaCount <= 1) return alert("MÍNIMO 1 VAGA");
-
-  document.getElementById("vagasContainer").lastChild.remove();
-  vagaCount--;
-}
-
-/* =========================
-   DINÂMICA DE TIPO
-========================= */
-function tipoChange(el, id) {
-  const div = document.getElementById("extra_" + id);
-  div.innerHTML = "";
-
-  const hoje = new Date();
-  const min = new Date();
-  min.setDate(hoje.getDate() + 5);
-  const minDate = min.toISOString().split('T')[0];
-
-  if (el.value === "AUMENTO DE EFETIVO") {
-    div.innerHTML = `
-      <div class="field-group">
-        <label>QUANTIDADE</label>
-        <input type="number" name="QTD_${id}">
-      </div>
-      <div class="field-group">
-        <label>MOTIVO</label>
-        <input type="text" name="MOTIVO_${id}">
-      </div>`;
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
   }
 
-  if (el.value === "COBERTURA DE FERIAS") {
-    div.innerHTML = `
-      <div class="field-group">
-        <label>NOME SUBSTITUÍDO</label>
-        <input type="text" name="NOME_${id}">
-      </div>
-      <div class="field-row field-group">
-        <div>
-          <label>INÍCIO</label>
-          <input type="date" name="INI_${id}" value="${minDate}">
-        </div>
-        <div>
-          <label>FIM</label>
-          <input type="date" name="FIM_${id}">
-        </div>
-      </div>`;
+  const formData = new FormData(form);
+  let conteudo = '';
+
+  const destinatarios = `
+<tr>
+  <td style="padding:6px;border:1px solid #ccc;font-weight:bold;">
+    DESTINATÁRIOS
+  </td>
+  <td style="padding:6px;border:1px solid #ccc;">
+    PARA: mayara.dantas@grupobrasilforte.com.br <br>
+    CC: allan.borges@grupobrasilforte.com.br, maria.fernanda@grupobrasilforte.com.br <br>
+    SOLICITANTE: ${document.getElementById('emailSolicitante').value}
+  </td>
+</tr>
+`;
+
+  for (let [key, value] of formData.entries()) {
+
+    if (key.startsWith('_')) continue;
+    if (value instanceof File) continue;
+
+    if (value) {
+      conteudo += `
+        <tr>
+          <td style="padding:6px;border:1px solid #ccc;font-weight:bold;">
+           ${key.replaceAll('_',' ').toUpperCase()}
+          </td>
+          <td style="padding:6px;border:1px solid #ccc;">
+            ${value}
+          </td>
+        </tr>`;
+    }
   }
 
-  if (el.value === "LICENCA MEDICA") {
-    div.innerHTML = `
-      <div class="field-group">
-        <label>NOME</label>
-        <input type="text" name="NOME_${id}">
-      </div>
-      <div class="field-group">
-        <label>INÍCIO</label>
-        <input type="date" name="INI_${id}" value="${minDate}">
-      </div>`;
-  }
+  const janela = window.open('', '', 'width=900,height=800');
 
-  if (el.value === "INTERMITENTE") {
-    div.innerHTML = `
-      <div class="field-group">
-        <label>MOTIVO</label>
-        <input type="text" name="MOTIVO_${id}">
-      </div>`;
-  }
-
-  if (el.value === "SUBSTITUICAO") {
-    div.innerHTML = `
-      <div class="field-group">
-        <label>SUBSTITUÍDO</label>
-        <input type="text" name="SUB_${id}">
-      </div>`;
-  }
-}
-
-/* =========================
-   PRÉVIA
-========================= */
-function gerarPrevia() {
-  const form = document.getElementById("formVaga");
-  const data = new FormData(form);
-
-  let rows = "";
-
-  for (let [k,v] of data.entries()) {
-    if (!v || v instanceof File) continue;
-
-    rows += `
-    <tr>
-      <td style="border:1px solid #ccc;padding:6px;font-weight:bold;">${k}</td>
-      <td style="border:1px solid #ccc;padding:6px;">${v}</td>
-    </tr>`;
-  }
-
-  const win = window.open("", "", "width=900,height=700");
-
-  win.document.write(`
-  <html>
-  <body style="font-family:Arial;padding:20px">
-    <h2>PRÉVIA - FORMULÁRIO</h2>
-    <table style="width:100%;border-collapse:collapse">
-      ${rows}
-    </table>
-    <br>
-    <button onclick="window.close()">FECHAR</button>
-  </body>
-  </html>
+  janela.document.write(`
+    <html>
+    <head>
+      <title>PRÉVIA – ABERTURA DE VAGA</title>
+    </head>
+    <body style="font-family:Arial;padding:30px;">
+      <h2 style="text-align:center;">PRÉVIA – FORMULÁRIO DE ABERTURA DE VAGA</h2>
+     <table style="width:100%;border-collapse:collapse;">
+  ${destinatarios}
+  ${conteudo}
+</table>
+      <br><br>
+      <button onclick="window.close()" 
+        style="padding:10px 20px;background:#999;color:#fff;border:none;">
+        FECHAR
+      </button>
+    </body>
+    </html>
   `);
 
-  win.document.close();
-}
+  janela.document.close();
 
-/* inicia */
-addVaga();
+  // libera botão de envio definitivo
+  btnEnviar.classList.remove('hidden');
+  btnPrevia.classList.add('hidden');
+
+});
+
+form.addEventListener('submit', function () {
+
+  const emailSolicitante = document.getElementById('emailSolicitante').value.trim();
+  const campoCC = document.querySelector('input[name="_cc"]');
+
+  if (emailSolicitante && !campoCC.value.includes(emailSolicitante)) {
+    campoCC.value += "," + emailSolicitante;
+  }
+
+  // evita duplo envio
+  btnEnviar.disabled = true;
+
+});
 
 </script>
 
