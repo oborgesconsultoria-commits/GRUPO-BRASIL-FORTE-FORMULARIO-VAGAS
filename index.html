@@ -169,6 +169,20 @@ document.getElementById("empresaSelect").addEventListener("change", function(){
     `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value} | ${protocolo}`;
 });
 
+// MÁSCARA TELEFONE
+function mascaraTelefone(el) {
+  let v = el.value.replace(/\D/g, '');
+  if (v.length > 11) v = v.slice(0,11);
+
+  if (v.length > 6) {
+    el.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  } else if (v.length > 2) {
+    el.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
+  } else {
+    el.value = v;
+  }
+}
+
 // ADICIONAR VAGA
 function addVaga() {
   vagaCount++;
@@ -233,7 +247,7 @@ function addVaga() {
 
   <div class="field-group">
     <label>TELEFONE</label>
-    <input type="text" name="TEL_${vagaCount}">
+    <input type="text" name="TEL_${vagaCount}" oninput="mascaraTelefone(this)" maxlength="15">
   </div>
 
   <div class="field-group">
@@ -249,7 +263,7 @@ function addVaga() {
   document.getElementById("vagasContainer").appendChild(div);
 }
 
-// REMOVER VAGA
+// REMOVER
 function removeVaga() {
   if (vagaCount <= 1) {
     alert("PELO MENOS UMA VAGA DEVE EXISTIR");
@@ -331,26 +345,64 @@ function tipoChange(select, id) {
   }
 }
 
-// PRÉVIA
+// PRÉVIA PROFISSIONAL
 function gerarPrevia() {
-  const formData = new FormData(document.getElementById("formVaga"));
 
-  let tabela = "<table style='width:100%;border-collapse:collapse'>";
+  const form = document.getElementById("formVaga");
+  const formData = new FormData(form);
+
+  let conteudo = "";
+
+  const destinatarios = `
+  <tr>
+    <td style="padding:6px;border:1px solid #ccc;font-weight:bold;">
+      DESTINATÁRIOS
+    </td>
+    <td style="padding:6px;border:1px solid #ccc;">
+      PARA: mayara.dantas@grupobrasilforte.com.br <br>
+      CC: allan.borges@grupobrasilforte.com.br, maria.fernanda@grupobrasilforte.com.br <br>
+      SOLICITANTE: ${form.querySelector('input[name="EMAIL"]').value}
+    </td>
+  </tr>
+  `;
 
   for (let [k, v] of formData.entries()) {
-    if (v && !(v instanceof File)) {
-      tabela += `
-      <tr>
-        <td style="border:1px solid #ccc;padding:6px;font-weight:bold">${k}</td>
-        <td style="border:1px solid #ccc;padding:6px">${v}</td>
-      </tr>`;
-    }
+    if (!v || v instanceof File) continue;
+
+    conteudo += `
+    <tr>
+      <td style="padding:6px;border:1px solid #ccc;font-weight:bold;">
+        ${k.replaceAll("_"," ")}
+      </td>
+      <td style="padding:6px;border:1px solid #ccc;">
+        ${v}
+      </td>
+    </tr>`;
   }
 
-  tabela += "</table>";
+  const janela = window.open('', '', 'width=900,height=800');
 
-  const win = window.open("", "", "width=900,height=800");
-  win.document.write("<h2>PRÉVIA - FORMULÁRIO</h2>" + tabela);
+  janela.document.write(`
+    <html>
+    <head>
+      <title>PRÉVIA – ABERTURA DE VAGA</title>
+    </head>
+    <body style="font-family:Arial;padding:30px;">
+      <h2 style="text-align:center;">PRÉVIA – FORMULÁRIO DE ABERTURA DE VAGA</h2>
+      <table style="width:100%;border-collapse:collapse;">
+        ${destinatarios}
+        ${conteudo}
+      </table>
+      <br><br>
+      <button onclick="window.close()" 
+        style="padding:10px 20px;background:#999;color:#fff;border:none;">
+        FECHAR
+      </button>
+    </body>
+    </html>
+  `);
+
+  janela.document.close();
 }
 
 // inicia com 1 vaga
