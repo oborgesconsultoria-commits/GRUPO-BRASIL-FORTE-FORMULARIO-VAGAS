@@ -152,7 +152,6 @@ let vagaCount = 0;
 
   const protocolo = `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
   document.getElementById('protocolo').value = protocolo;
-
   document.getElementById('dataAbertura').value = f(hoje);
 
   document.getElementById('assuntoEmail').value =
@@ -178,7 +177,6 @@ function getDataMinima() {
 // ===== ADICIONAR VAGA =====
 function addVaga() {
   vagaCount++;
-
   const dataMin = getDataMinima();
 
   const div = document.createElement('div');
@@ -188,6 +186,11 @@ function addVaga() {
   <h3>VAGA ${String(vagaCount).padStart(2, '0')}</h3>
 
   <div class="field-group">
+    <label>DATA PREVISTA DE INÍCIO</label>
+    <input type="date" name="INICIO_${vagaCount}" min="${dataMin}" value="${dataMin}" required>
+  </div>
+
+  <div class="field-group">
     <label>POSTO DE TRABALHO</label>
     <input type="text" name="POSTO_${vagaCount}" required>
   </div>
@@ -195,11 +198,6 @@ function addVaga() {
   <div class="field-group">
     <label>CARGO</label>
     <input type="text" name="CARGO_${vagaCount}" required>
-  </div>
-
-  <div class="field-group">
-    <label>DATA PREVISTA DE INÍCIO</label>
-    <input type="date" name="INICIO_${vagaCount}" min="${dataMin}" value="${dataMin}" required>
   </div>
 
   <div class="field-group">
@@ -273,7 +271,19 @@ function tipoChange(el, id) {
 
   extra.innerHTML = '';
 
-  if (el.value === 'AUMENTO DE EFETIVO' || el.value === 'INTERMITENTE') {
+  if (el.value === 'AUMENTO DE EFETIVO') {
+    extra.innerHTML = `
+    <div class="field-group">
+      <label>QUANTIDADE DE VAGAS</label>
+      <input type="number" name="QTD_${id}" min="1" required>
+    </div>
+    <div class="field-group">
+      <label>MOTIVO / JUSTIFICATIVA</label>
+      <input type="text" name="MOTIVO_${id}">
+    </div>`;
+  }
+
+  if (el.value === 'INTERMITENTE') {
     extra.innerHTML = `
     <div class="field-group">
       <label>MOTIVO / JUSTIFICATIVA</label>
