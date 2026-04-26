@@ -76,7 +76,6 @@ button {
   text-align: center;
   margin-bottom: 20px;
 }
-
 .logo img {
   max-width: 260px;
 }
@@ -87,12 +86,12 @@ button {
 <div class="wrapper">
 
 <div class="logo">
-  <img src="assets/logoGBF.png">
+  <img src="assets/logoGBF.png" alt="Logo">
 </div>
 
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
-<form action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST" enctype="multipart/form-data">
+<form id="formVaga" action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST">
 
 <!-- BLOCO FIXO -->
 <div class="field-group">
@@ -101,12 +100,12 @@ button {
 </div>
 
 <div class="field-group">
-<label>DATA DA ABERTURA</label>
+<label>DATA DE ABERTURA</label>
 <input type="date" id="dataAbertura" name="DATA_ABERTURA" readonly>
 </div>
 
 <div class="field-group">
-<label>EMPRESA SOLICITANTE DA VAGA</label>
+<label>DISPONIBILIZAÇÃO DA VAGA NA EMPRESA</label>
 <select name="EMPRESA" id="empresaSelect" required>
 <option value="">SELECIONE</option>
 <option>AKVA MONITORAMENTO</option>
@@ -128,10 +127,13 @@ button {
 <input type="email" name="EMAIL" required>
 </div>
 
+<!-- VAGAS -->
 <div id="vagasContainer"></div>
 
 <button type="button" onclick="addVaga()">+ ADICIONAR VAGA</button>
 <button type="button" onclick="removeVaga()">- REMOVER ÚLTIMA VAGA</button>
+
+<button type="button" onclick="gerarPrevia()">GERAR PRÉVIA</button>
 
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_subject" id="assuntoEmail">
@@ -145,49 +147,45 @@ button {
 
 let vagaCount = 0;
 
-// ===== DATA + PROTOCOLO =====
+// DATA + PROTOCOLO
 (function () {
   const hoje = new Date();
   const f = d => d.toISOString().split('T')[0];
 
+  document.getElementById('dataAbertura').value = f(hoje);
+
   const protocolo = `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
   document.getElementById('protocolo').value = protocolo;
-  document.getElementById('dataAbertura').value = f(hoje);
 
   document.getElementById('assuntoEmail').value =
     `FORMULÁRIO DE ABERTURA DE VAGAS - ${protocolo}`;
 })();
 
-// ===== ASSUNTO DINÂMICO =====
-empresaSelect.addEventListener('change', function () {
-  const protocolo = document.getElementById('protocolo').value;
-  if (this.value) {
-    assuntoEmail.value =
-      `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value} | ${protocolo}`;
-  }
+// ASSUNTO DINÂMICO
+document.getElementById("empresaSelect").addEventListener("change", function(){
+  const protocolo = document.getElementById("protocolo").value;
+
+  document.getElementById("assuntoEmail").value =
+    `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value} | ${protocolo}`;
 });
 
-// ===== DATA +5 DIAS =====
-function getDataMinima() {
-  const dataAbertura = new Date(document.getElementById('dataAbertura').value);
-  dataAbertura.setDate(dataAbertura.getDate() + 5);
-  return dataAbertura.toISOString().split('T')[0];
-}
-
-// ===== ADICIONAR VAGA =====
+// ADICIONAR VAGA
 function addVaga() {
   vagaCount++;
-  const dataMin = getDataMinima();
 
-  const div = document.createElement('div');
-  div.className = 'vaga-box';
+  const hoje = new Date();
+  hoje.setDate(hoje.getDate() + 5);
+  const minDate = hoje.toISOString().split('T')[0];
+
+  const div = document.createElement("div");
+  div.className = "vaga-box";
 
   div.innerHTML = `
-  <h3>VAGA ${String(vagaCount).padStart(2, '0')}</h3>
+  <h3>VAGA ${String(vagaCount).padStart(2,'0')}</h3>
 
   <div class="field-group">
-    <label>DATA PREVISTA DE INÍCIO</label>
-    <input type="date" name="INICIO_${vagaCount}" min="${dataMin}" value="${dataMin}" required>
+    <label>DATA INÍCIO</label>
+    <input type="date" name="INICIO_${vagaCount}" value="${minDate}" min="${minDate}" required>
   </div>
 
   <div class="field-group">
@@ -211,7 +209,7 @@ function addVaga() {
 
   <div class="field-group">
     <label>TIPO DE CONTRATAÇÃO</label>
-    <select name="TIPO_${vagaCount}" onchange="tipoChange(this, ${vagaCount})" required>
+    <select onchange="tipoChange(this, ${vagaCount})" name="TIPO_${vagaCount}" required>
       <option value="">SELECIONE</option>
       <option>AUMENTO DE EFETIVO</option>
       <option>COBERTURA DE FERIAS</option>
@@ -230,7 +228,7 @@ function addVaga() {
 
   <div class="field-group">
     <label>NOME DO CANDIDATO</label>
-    <input type="text" name="NOME_CANDIDATO_${vagaCount}">
+    <input type="text" name="CANDIDATO_${vagaCount}">
   </div>
 
   <div class="field-group">
@@ -239,8 +237,8 @@ function addVaga() {
   </div>
 
   <div class="field-group">
-    <label>WHATSAPP</label>
-    <select name="WHATS_${vagaCount}">
+    <label>POSSUI WHATSAPP?</label>
+    <select name="WPP_${vagaCount}">
       <option value="">SELECIONE</option>
       <option>SIM</option>
       <option>NÃO</option>
@@ -248,90 +246,111 @@ function addVaga() {
   </div>
   `;
 
-  document.getElementById('vagasContainer').appendChild(div);
+  document.getElementById("vagasContainer").appendChild(div);
 }
 
-// ===== REMOVER VAGA =====
+// REMOVER VAGA
 function removeVaga() {
-  const container = document.getElementById('vagasContainer');
-
   if (vagaCount <= 1) {
-    alert('PELO MENOS UMA VAGA DEVE EXISTIR');
+    alert("PELO MENOS UMA VAGA DEVE EXISTIR");
     return;
   }
-
-  container.removeChild(container.lastElementChild);
+  document.getElementById("vagasContainer").lastChild.remove();
   vagaCount--;
 }
 
-// ===== DINÂMICA DE TIPO =====
-function tipoChange(el, id) {
-  const extra = document.getElementById('extra_' + id);
-  const dataMin = getDataMinima();
+// DINÂMICA
+function tipoChange(select, id) {
+  const div = document.getElementById("extra_" + id);
+  div.innerHTML = "";
 
-  extra.innerHTML = '';
-
-  if (el.value === 'AUMENTO DE EFETIVO') {
-    extra.innerHTML = `
-    <div class="field-group">
-      <label>QUANTIDADE DE VAGAS</label>
-      <input type="number" name="QTD_${id}" min="1" required>
-    </div>
-    <div class="field-group">
-      <label>MOTIVO / JUSTIFICATIVA</label>
-      <input type="text" name="MOTIVO_${id}">
-    </div>`;
-  }
-
-  if (el.value === 'INTERMITENTE') {
-    extra.innerHTML = `
-    <div class="field-group">
-      <label>MOTIVO / JUSTIFICATIVA</label>
-      <input type="text" name="MOTIVO_${id}">
-    </div>`;
-  }
-
-  if (el.value === 'COBERTURA DE FERIAS') {
-    extra.innerHTML = `
-    <div class="field-group">
-      <label>NOME DO COLABORADOR</label>
-      <input type="text" name="NOME_${id}">
-    </div>
-    <div class="field-row field-group">
-      <div>
-        <label>INÍCIO COBERTURA</label>
-        <input type="date" name="INI_${id}" min="${dataMin}" value="${dataMin}" required>
+  if (select.value === "AUMENTO DE EFETIVO") {
+    div.innerHTML = `
+      <div class="field-group">
+        <label>QUANTIDADE DE VAGAS</label>
+        <input type="number" name="QTD_${id}">
       </div>
-      <div>
-        <label>FIM COBERTURA</label>
-        <input type="date" name="FIM_${id}">
+      <div class="field-group">
+        <label>MOTIVO / JUSTIFICATIVA</label>
+        <input type="text" name="MOTIVO_${id}">
+      </div>`;
+  }
+
+  if (select.value === "INTERMITENTE") {
+    div.innerHTML = `
+      <div class="field-group">
+        <label>MOTIVO / JUSTIFICATIVA</label>
+        <input type="text" name="MOTIVO_${id}">
+      </div>`;
+  }
+
+  if (select.value === "COBERTURA DE FERIAS") {
+    const hoje = new Date();
+    hoje.setDate(hoje.getDate() + 5);
+    const minDate = hoje.toISOString().split('T')[0];
+
+    div.innerHTML = `
+      <div class="field-group">
+        <label>NOME DO COLABORADOR</label>
+        <input type="text" name="NOME_${id}">
       </div>
-    </div>`;
+      <div class="field-row field-group">
+        <div>
+          <label>DATA INÍCIO</label>
+          <input type="date" name="INI_${id}" value="${minDate}" min="${minDate}">
+        </div>
+        <div>
+          <label>DATA FIM</label>
+          <input type="date" name="FIM_${id}">
+        </div>
+      </div>`;
   }
 
-  if (el.value === 'LICENCA MEDICA') {
-    extra.innerHTML = `
-    <div class="field-group">
-      <label>NOME DO COLABORADOR</label>
-      <input type="text" name="NOME_${id}">
-    </div>
-    <div class="field-group">
-      <label>INÍCIO PREVISTO</label>
-      <input type="date" name="INI_${id}" min="${dataMin}" value="${dataMin}" required>
-    </div>`;
+  if (select.value === "LICENCA MEDICA") {
+    const hoje = new Date();
+    hoje.setDate(hoje.getDate() + 5);
+    const minDate = hoje.toISOString().split('T')[0];
+
+    div.innerHTML = `
+      <div class="field-group">
+        <label>NOME DO COLABORADOR</label>
+        <input type="text" name="NOME_${id}">
+      </div>
+      <div class="field-group">
+        <label>DATA INÍCIO</label>
+        <input type="date" name="INI_${id}" value="${minDate}" min="${minDate}">
+      </div>`;
   }
 
-  if (el.value === 'SUBSTITUICAO') {
-    extra.innerHTML = `
-    <div class="field-group">
-      <label>NOME DO SUBSTITUÍDO</label>
-      <input type="text" name="SUB_${id}">
-    </div>
-    <div class="field-group">
-      <label>DATA INÍCIO</label>
-      <input type="date" name="INI_${id}" min="${dataMin}" value="${dataMin}" required>
-    </div>`;
+  if (select.value === "SUBSTITUICAO") {
+    div.innerHTML = `
+      <div class="field-group">
+        <label>NOME DO SUBSTITUÍDO</label>
+        <input type="text" name="SUB_${id}">
+      </div>`;
   }
+}
+
+// PRÉVIA
+function gerarPrevia() {
+  const formData = new FormData(document.getElementById("formVaga"));
+
+  let tabela = "<table style='width:100%;border-collapse:collapse'>";
+
+  for (let [k, v] of formData.entries()) {
+    if (v && !(v instanceof File)) {
+      tabela += `
+      <tr>
+        <td style="border:1px solid #ccc;padding:6px;font-weight:bold">${k}</td>
+        <td style="border:1px solid #ccc;padding:6px">${v}</td>
+      </tr>`;
+    }
+  }
+
+  tabela += "</table>";
+
+  const win = window.open("", "", "width=900,height=800");
+  win.document.write("<h2>PRÉVIA - FORMULÁRIO</h2>" + tabela);
 }
 
 // inicia com 1 vaga
