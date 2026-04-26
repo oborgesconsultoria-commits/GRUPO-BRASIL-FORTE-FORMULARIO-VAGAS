@@ -5,166 +5,198 @@
 <title>FORMULÁRIO DE ABERTURA DE VAGA</title>
 
 <style>
-body {
-  margin: 0;
-  padding: 0;
-  background: #f2f4f7;
-  font-family: Arial, Helvetica, sans-serif;
-  text-transform: uppercase;
-}
-
-.wrapper {
-  max-width: 900px;
-  margin: 40px auto;
-  background: #ffffff;
-  padding: 30px 40px;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-h1 {
-  font-size: 22px;
-  margin-bottom: 25px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-}
-
-.field-group { margin-bottom: 18px; }
-
-.field-row {
-  display: flex;
-  gap: 15px;
-}
-
-.field-row > div { flex: 1; }
-
-label {
-  display: block;
-  font-size: 13px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-input, select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  text-transform: uppercase;
-}
-
-.options label {
-  font-weight: normal;
-  display: block;
-  margin-bottom: 6px;
-}
-
-button {
-  margin-top: 30px;
-  width: 100%;
-  padding: 12px;
-  background: #005baa;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.hidden { display: none; }
-
-@media (max-width: 700px) {
-  .field-row { flex-direction: column; }
-}
-
-.logo {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.logo img {
-  max-width: 260px;
-  width: 100%;
-  height: auto;
-}
+body { background:#f2f4f7; font-family:Arial; text-transform:uppercase; }
+.wrapper { max-width:900px; margin:auto; background:#fff; padding:30px; }
+.field { margin-bottom:15px; }
+.vaga { border-top:2px solid #ddd; margin-top:20px; padding-top:20px; }
+.hidden { display:none; }
+button { padding:10px; margin-top:10px; cursor:pointer; }
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
-<div class="logo">
-  <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
-</div>
+<h2>ABERTURA DE VAGAS</h2>
 
-<form
-  id="formVaga"
-  action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
-  method="POST"
-  enctype="multipart/form-data">
-
-<h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
+<form id="formVaga">
 
 <!-- BLOCO FIXO -->
-
-<div class="field-group">
-  <label>Nº DO PROTOCOLO</label>
-  <input type="text" id="protocolo" name="PROTOCOLO" readonly>
+<div class="field">
+<label>PROTOCOLO</label>
+<input type="text" id="protocolo" readonly>
 </div>
 
-<div class="field-group">
-  <label>EMPRESA</label>
-  <select name="EMPRESA" required>
-    <option value="">SELECIONE</option>
-    <option value="AKVA MONITORAMENTO">AKVA MONITORAMENTO</option>
-    <option value="AKVA PROTECAO (HEFESTOR)">AKVA PROTEÇÃO (HEFESTOR)</option>
-    <option value="AKVA TECNOLOGIA">AKVA TECNOLOGIA</option>
-    <option value="ATRIA SERVICOS">ATRIA SERVIÇOS</option>
-    <option value="BRASIL FORTE">BRASIL FORTE</option>
-    <option value="VEGA SERVICOS">VEGA SERVIÇOS</option>
-  </select>
+<div class="field">
+<label>EMPRESA</label>
+<select required>
+<option></option>
+<option>AKVA</option>
+<option>BRASIL FORTE</option>
+</select>
 </div>
 
-<div class="field-group">
-  <label>SOLICITANTE</label>
-  <input type="text" name="SOLICITANTE" required>
+<div class="field">
+<label>SOLICITANTE</label>
+<input type="text" required>
 </div>
 
-<div class="field-group">
-  <label>E-MAIL DO SOLICITANTE</label>
-  <input type="email" id="emailSolicitante" name="EMAIL DO SOLICITANTE" required>
+<div class="field">
+<label>E-MAIL</label>
+<input type="email" required>
 </div>
 
-<div class="field-group">
-  <label>DATA DA ABERTURA</label>
-  <input type="date" id="dataAbertura" name="DATA DA ABERTURA" readonly>
+<div class="field">
+<label>DATA</label>
+<input type="date" id="dataAbertura">
 </div>
-  
-<input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_subject" id="assuntoEmail">
 
-<button type="button" id="btnPrevia">GERAR PRÉVIA</button>
+<!-- BOTÃO -->
+<button type="button" onclick="addVaga()">+ ADICIONAR VAGA</button>
+
+<!-- CONTAINER -->
+<div id="vagas"></div>
+
+<!-- ENVIO -->
 <button type="submit">ENVIAR</button>
-  
+
 </form>
 </div>
 
 <script>
 
-// MAIÚSCULO AUTOMÁTICO
-document.querySelectorAll('input[type="text"]').forEach(el => {
-  el.addEventListener('input', () => {
-    el.value = el.value.toUpperCase();
+let count = 0;
+
+function addVaga() {
+
+  count++;
+
+  const container = document.getElementById('vagas');
+
+  const div = document.createElement('div');
+  div.classList.add('vaga');
+
+  div.innerHTML = `
+
+<h3>VAGA ${count}</h3>
+
+<label>POSTO</label>
+<input type="text">
+
+<label>CARGO</label>
+<input type="text">
+
+<label>ESCALA</label>
+<select id="escala_${count}">
+<option></option>
+<option>12X36</option>
+<option>5X2</option>
+</select>
+
+<label>ENTRADA</label>
+<input type="time" id="entrada_${count}">
+
+<label>SAÍDA</label>
+<input type="time" id="saida_${count}">
+
+<label>PORTAL</label>
+<input type="checkbox" id="sim_${count}"> SIM
+<input type="checkbox" id="nao_${count}"> NÃO
+
+<label>TIPO</label>
+<select onchange="tipo(this,${count})">
+<option></option>
+<option>AUMENTO DE EFETIVO</option>
+<option>COBERTURA DE FERIAS</option>
+<option>LICENCA MEDICA</option>
+<option>SUBSTITUICAO</option>
+</select>
+
+<div id="motivo_${count}" class="hidden">
+<label>MOTIVO</label>
+<input type="text">
+</div>
+
+<div id="sub_${count}" class="hidden">
+<label>NOME SUBSTITUÍDO</label>
+<input type="text">
+</div>
+
+<div id="ferias_${count}" class="hidden">
+<label>INÍCIO</label>
+<input type="date">
+<label>FIM</label>
+<input type="date">
+</div>
+
+`;
+
+  container.appendChild(div);
+
+  eventos(count);
+}
+
+// REGRAS TIPO
+function tipo(el, i) {
+
+  const sub = document.getElementById(`sub_${i}`);
+  const ferias = document.getElementById(`ferias_${i}`);
+  const motivo = document.getElementById(`motivo_${i}`);
+
+  sub.classList.add('hidden');
+  ferias.classList.add('hidden');
+  motivo.classList.add('hidden');
+
+  if (el.value === "COBERTURA DE FERIAS") {
+    sub.classList.remove('hidden');
+    ferias.classList.remove('hidden');
+  }
+
+  else if (el.value === "SUBSTITUICAO" || el.value === "LICENCA MEDICA") {
+    sub.classList.remove('hidden');
+  }
+
+  else {
+    motivo.classList.remove('hidden');
+  }
+}
+
+// EVENTOS POR VAGA
+function eventos(i) {
+
+  const sim = document.getElementById(`sim_${i}`);
+  const nao = document.getElementById(`nao_${i}`);
+
+  sim.onchange = () => { if(sim.checked) nao.checked=false; };
+  nao.onchange = () => { if(nao.checked) sim.checked=false; };
+
+  const entrada = document.getElementById(`entrada_${i}`);
+  const saida = document.getElementById(`saida_${i}`);
+  const escala = document.getElementById(`escala_${i}`);
+
+  saida.addEventListener('change', () => {
+
+    if (!entrada.value || !saida.value) return;
+
+    const toMin = t => {
+      const [h,m]=t.split(':').map(Number);
+      return h*60+m;
+    };
+
+    let ini = toMin(entrada.value);
+    let fim = toMin(saida.value);
+
+    if (fim <= ini) fim += 1440;
+
+    if (escala.value==="12X36" && (fim-ini)<660) {
+      alert("ESCALA 12X36 ≈ 12H");
+      saida.value="";
+    }
   });
-});
+}
 
-// PROTOCOLO + DATA AUTOMÁTICA
+// PROTOCOLO
 (function () {
-  document.getElementById('assuntoEmail').value = 'ABERTURA DE VAGA';
-
   const hoje = new Date();
   const f = d => d.toISOString().split('T')[0];
 
@@ -175,6 +207,6 @@ document.querySelectorAll('input[type="text"]').forEach(el => {
 })();
 
 </script>
-  
+
 </body>
 </html>
