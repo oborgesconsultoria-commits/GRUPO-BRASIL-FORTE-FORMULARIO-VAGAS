@@ -66,10 +66,10 @@ button {
   cursor: pointer;
 }
 
-.hidden { display: none; }
-
-@media (max-width: 700px) {
-  .field-row { flex-direction: column; }
+.vaga-box {
+  border-top: 2px dashed #ccc;
+  margin-top: 30px;
+  padding-top: 20px;
 }
 </style>
 </head>
@@ -77,23 +77,13 @@ button {
 <body>
 <div class="wrapper">
 
-<form id="formVaga" action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST">
-
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
-<!-- FIXO -->
+<form action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST" enctype="multipart/form-data">
+
 <div class="field-group">
 <label>Nº DO PROTOCOLO</label>
 <input type="text" id="protocolo" name="PROTOCOLO" readonly>
-</div>
-
-<div class="field-group">
-<label>EMPRESA</label>
-<select name="EMPRESA" required>
-<option value=""></option>
-<option>AKVA</option>
-<option>BRASIL FORTE</option>
-</select>
 </div>
 
 <div class="field-group">
@@ -103,103 +93,14 @@ button {
 
 <div class="field-group">
 <label>E-MAIL</label>
-<input type="email" id="emailSolicitante" required>
+<input type="email" name="EMAIL" required>
 </div>
 
-<div class="field-group">
-<label>DATA</label>
-<input type="date" id="dataAbertura">
-</div>
+<div id="vagasContainer"></div>
 
-<button type="button" id="addVaga">+ ADICIONAR VAGA</button>
+<button type="button" onclick="addVaga()">+ ADICIONAR VAGA</button>
 
-<div id="containerVagas"></div>
-
-<!-- TEMPLATE -->
-<div id="vagaTemplate" class="hidden">
-
-<div class="field-group">
-<label>POSTO DE TRABALHO</label>
-<input type="text" name="POSTO">
-</div>
-
-<div class="field-group">
-<label>CARGO</label>
-<input type="text" name="CARGO">
-</div>
-
-<div class="field-row field-group">
-<div>
-<label>ESCALA</label>
-<select name="ESCALA">
-<option></option>
-<option>12X36</option>
-<option>5X2</option>
-<option>6X1</option>
-<option>5X1</option>
-<option>INTERMITENTE</option>
-</select>
-</div>
-
-<div>
-<label>ENTRADA</label>
-<input type="time" name="ENTRADA">
-</div>
-
-<div>
-<label>SAÍDA</label>
-<input type="time" name="SAIDA">
-</div>
-</div>
-
-<div class="field-group">
-<label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
-<select name="PORTAL">
-<option></option>
-<option>SIM</option>
-<option>NÃO</option>
-</select>
-</div>
-
-<div class="field-group">
-<label>TIPO DE CONTRATAÇÃO</label>
-<select class="tipo">
-<option></option>
-<option>AUMENTO DE EFETIVO</option>
-<option>COBERTURA DE FERIAS</option>
-<option>INTERMITENTE</option>
-<option>LICENCA MEDICA</option>
-<option>SUBSTITUICAO</option>
-</select>
-</div>
-
-<div class="motivo hidden field-group">
-<label>MOTIVO / JUSTIFICATIVA</label>
-<input type="text" name="MOTIVO">
-</div>
-
-<div class="sub hidden field-group">
-<label>NOME DO COLABORADOR</label>
-<input type="text" name="NOME">
-
-<label>DATA INÍCIO</label>
-<input type="date" name="DATA INICIO">
-</div>
-
-<div class="ferias hidden field-group">
-<label>NOME EM FÉRIAS</label>
-<input type="text" name="NOME FERIAS">
-
-<label>INÍCIO</label>
-<input type="date" name="INICIO FERIAS">
-
-<label>FIM</label>
-<input type="date" name="FIM FERIAS">
-</div>
-
-</div>
-
-<input type="hidden" id="relatorio" name="RELATORIO_VAGAS">
+<input type="hidden" name="_captcha" value="false">
 
 <button type="submit">ENVIAR</button>
 
@@ -208,91 +109,166 @@ button {
 
 <script>
 
-let count = 0;
+let vagaCount = 0;
 
-document.getElementById('addVaga').onclick = () => {
+function addVaga() {
+  vagaCount++;
 
-count++;
+  const container = document.getElementById('vagasContainer');
 
-const t = document.getElementById('vagaTemplate');
-const c = t.cloneNode(true);
+  const div = document.createElement('div');
+  div.className = 'vaga-box';
 
-c.classList.remove('hidden');
-c.removeAttribute('id');
+  div.innerHTML = `
+  <h3>VAGA ${String(vagaCount).padStart(2, '0')}</h3>
 
-// título VAGA 01
-const titulo = document.createElement('h3');
-titulo.innerText = `VAGA ${String(count).padStart(2,'0')}`;
-c.prepend(titulo);
+  <div class="field-group">
+    <label>POSTO DE TRABALHO</label>
+    <input type="text" name="POSTO_${vagaCount}" required>
+  </div>
 
-// evitar conflito
-c.querySelectorAll('[name]').forEach(el => el.name += '_' + count);
+  <div class="field-group">
+    <label>CARGO</label>
+    <input type="text" name="CARGO_${vagaCount}" required>
+  </div>
 
-document.getElementById('containerVagas').appendChild(c);
+  <div class="field-row field-group">
+    <div>
+      <label>ESCALA</label>
+      <select name="ESCALA_${vagaCount}" required>
+        <option value="">SELECIONE</option>
+        <option>12X36</option>
+        <option>5X2</option>
+        <option>6X1</option>
+        <option>5X1</option>
+        <option>INTERMITENTE</option>
+      </select>
+    </div>
 
-// regras
-const tipo = c.querySelector('.tipo');
-const motivo = c.querySelector('.motivo');
-const sub = c.querySelector('.sub');
-const ferias = c.querySelector('.ferias');
+    <div>
+      <label>ENTRADA</label>
+      <input type="time" name="ENTRADA_${vagaCount}" required>
+    </div>
 
-tipo.onchange = () => {
+    <div>
+      <label>SAÍDA</label>
+      <input type="time" name="SAIDA_${vagaCount}" required>
+    </div>
+  </div>
 
-motivo.classList.add('hidden');
-sub.classList.add('hidden');
-ferias.classList.add('hidden');
+  <div class="field-group">
+    <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
+    <select name="PORTAL_${vagaCount}" required>
+      <option value="">SELECIONE</option>
+      <option>SIM</option>
+      <option>NÃO</option>
+    </select>
+  </div>
 
-if (tipo.value === 'AUMENTO DE EFETIVO' || tipo.value === 'INTERMITENTE') {
-motivo.classList.remove('hidden');
+  <div class="field-group">
+    <label>TIPO DE CONTRATAÇÃO</label>
+    <select name="TIPO_${vagaCount}" onchange="tipoChange(this, ${vagaCount})" required>
+      <option value="">SELECIONE</option>
+      <option>AUMENTO DE EFETIVO</option>
+      <option>COBERTURA DE FERIAS</option>
+      <option>INTERMITENTE</option>
+      <option>LICENCA MEDICA</option>
+      <option>SUBSTITUICAO</option>
+    </select>
+  </div>
+
+  <div id="extra_${vagaCount}"></div>
+
+  <div class="field-group">
+    <label>ANEXAR CURRÍCULO</label>
+    <input type="file" name="CURRICULO_${vagaCount}">
+  </div>
+
+  <div class="field-group">
+    <label>NOME DO CANDIDATO</label>
+    <input type="text" name="NOME_CANDIDATO_${vagaCount}">
+  </div>
+
+  <div class="field-group">
+    <label>TELEFONE</label>
+    <input type="text" name="TEL_${vagaCount}">
+  </div>
+
+  <div class="field-group">
+    <label>WHATSAPP</label>
+    <select name="WHATS_${vagaCount}">
+      <option value="">SELECIONE</option>
+      <option>SIM</option>
+      <option>NÃO</option>
+    </select>
+  </div>
+  `;
+
+  container.appendChild(div);
 }
 
-if (tipo.value === 'SUBSTITUICAO' || tipo.value === 'LICENCA MEDICA') {
-sub.classList.remove('hidden');
+function tipoChange(el, id) {
+  const extra = document.getElementById('extra_' + id);
+  extra.innerHTML = '';
+
+  if (el.value === 'AUMENTO DE EFETIVO' || el.value === 'INTERMITENTE') {
+    extra.innerHTML = `
+    <div class="field-group">
+      <label>MOTIVO / JUSTIFICATIVA</label>
+      <input type="text" name="MOTIVO_${id}">
+    </div>`;
+  }
+
+  if (el.value === 'COBERTURA DE FERIAS') {
+    extra.innerHTML = `
+    <div class="field-group">
+      <label>NOME DO COLABORADOR</label>
+      <input type="text" name="NOME_${id}">
+    </div>
+    <div class="field-row field-group">
+      <div>
+        <label>INÍCIO</label>
+        <input type="date" name="INI_${id}">
+      </div>
+      <div>
+        <label>FIM</label>
+        <input type="date" name="FIM_${id}">
+      </div>
+    </div>`;
+  }
+
+  if (el.value === 'LICENCA MEDICA') {
+    extra.innerHTML = `
+    <div class="field-group">
+      <label>NOME DO COLABORADOR</label>
+      <input type="text" name="NOME_${id}">
+    </div>
+    <div class="field-group">
+      <label>INÍCIO PREVISTO</label>
+      <input type="date" name="INI_${id}">
+    </div>`;
+  }
+
+  if (el.value === 'SUBSTITUICAO') {
+    extra.innerHTML = `
+    <div class="field-group">
+      <label>NOME DO SUBSTITUÍDO</label>
+      <input type="text" name="SUB_${id}">
+    </div>`;
+  }
 }
 
-if (tipo.value === 'COBERTURA DE FERIAS') {
-ferias.classList.remove('hidden');
-}
+// protocolo automático
+(function () {
+  const hoje = new Date();
+  const f = d => d.toISOString().split('T')[0];
 
-};
-
-};
-
-// RELATORIO
-function gerarRelatorio(){
-
-let txt = '';
-
-document.querySelectorAll('#containerVagas > div').forEach((v,i)=>{
-
-txt += `====================\nVAGA ${i+1}\n====================\n`;
-
-v.querySelectorAll('input,select').forEach(el=>{
-if(el.value) txt += `${el.name}: ${el.value}\n`;
-});
-
-txt += '\n';
-
-});
-
-document.getElementById('relatorio').value = txt;
-}
-
-// SUBMIT
-document.getElementById('formVaga').onsubmit = ()=>{
-gerarRelatorio();
-};
-
-// protocolo
-(function(){
-const d=new Date();
-const f=x=>x.toISOString().split('T')[0];
-
-document.getElementById('protocolo').value =
-`AV-${f(d).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
-
-document.getElementById('dataAbertura').value=f(d);
+  document.getElementById('protocolo').value =
+    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
 })();
+
+// cria primeira vaga automática
+addVaga();
 
 </script>
 
