@@ -5,59 +5,198 @@
 <title>FORMULÁRIO DE ABERTURA DE VAGA</title>
 
 <style>
-body { background:#f2f4f7; font-family:Arial; text-transform:uppercase; }
-.wrapper { max-width:900px; margin:auto; background:#fff; padding:30px; }
-.field { margin-bottom:15px; }
-.vaga { border-top:2px solid #ddd; margin-top:20px; padding-top:20px; }
-.hidden { display:none; }
-button { padding:10px; margin-top:10px; cursor:pointer; }
+body {
+  margin: 0;
+  padding: 0;
+  background: #f2f4f7;
+  font-family: Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+}
+
+.wrapper {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+h1 {
+  font-size: 22px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.field-group { margin-bottom: 18px; }
+
+.field-row {
+  display: flex;
+  gap: 15px;
+}
+
+.field-row > div { flex: 1; }
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.options label {
+  font-weight: normal;
+  display: block;
+  margin-bottom: 6px;
+}
+
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: #005baa;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 700px) {
+  .field-row { flex-direction: column; }
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo img {
+  max-width: 260px;
+  width: 100%;
+}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
-<h2>ABERTURA DE VAGAS</h2>
-
-<form id="formVaga">
-
-<!-- BLOCO FIXO -->
-<div class="field">
-<label>PROTOCOLO</label>
-<input type="text" id="protocolo" readonly>
+<div class="logo">
+  <img src="assets/logoGBF.png">
 </div>
 
-<div class="field">
+<form id="formVaga"
+action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
+method="POST">
+
+<h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
+
+<!-- FIXO -->
+<div class="field-group">
+<label>Nº DO PROTOCOLO</label>
+<input type="text" id="protocolo" name="PROTOCOLO" readonly>
+</div>
+
+<div class="field-group">
 <label>EMPRESA</label>
-<select required>
-<option></option>
+<select name="EMPRESA" required>
+<option value=""></option>
 <option>AKVA</option>
 <option>BRASIL FORTE</option>
 </select>
 </div>
 
-<div class="field">
+<div class="field-group">
 <label>SOLICITANTE</label>
-<input type="text" required>
+<input type="text" name="SOLICITANTE" required>
 </div>
 
-<div class="field">
+<div class="field-group">
 <label>E-MAIL</label>
-<input type="email" required>
+<input type="email" id="emailSolicitante" required>
 </div>
 
-<div class="field">
+<div class="field-group">
 <label>DATA</label>
 <input type="date" id="dataAbertura">
 </div>
 
 <!-- BOTÃO -->
-<button type="button" onclick="addVaga()">+ ADICIONAR VAGA</button>
+<button type="button" id="addVaga">+ ADICIONAR VAGA</button>
 
 <!-- CONTAINER -->
-<div id="vagas"></div>
+<div id="containerVagas"></div>
 
-<!-- ENVIO -->
+<!-- TEMPLATE (SEU BLOCO) -->
+<div id="vagaTemplate" class="hidden">
+
+<div class="field-group">
+<label>POSTO DE TRABALHO</label>
+<input type="text" name="POSTO DE TRABALHO">
+</div>
+
+<div class="field-group">
+<label>CARGO</label>
+<input type="text" name="CARGO">
+</div>
+
+<div class="field-row field-group">
+<div>
+<label>ESCALA</label>
+<select name="ESCALA" id="escala">
+<option></option>
+<option>12X36</option>
+<option>5X2</option>
+</select>
+</div>
+<div>
+<label>ENTRADA</label>
+<input type="time" id="horaEntrada">
+</div>
+<div>
+<label>SAÍDA</label>
+<input type="time" id="horaSaida">
+</div>
+</div>
+
+<div class="field-group">
+<label>PORTAL</label>
+<label><input type="checkbox" id="portalSim"> SIM</label>
+<label><input type="checkbox" id="portalNao"> NÃO</label>
+</div>
+
+<div class="field-group">
+<label>TIPO</label>
+<label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="AUMENTO DE EFETIVO"> AUMENTO</label>
+<label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="COBERTURA DE FERIAS"> FÉRIAS</label>
+<label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="SUBSTITUICAO"> SUBSTITUIÇÃO</label>
+</div>
+
+<div class="hidden subnivel">
+<input type="text" name="NOME COLABORADOR SUBSTITUIDO" placeholder="NOME">
+</div>
+
+<div class="hidden ferias">
+<input type="date" name="DATA INICIO COBERTURA">
+<input type="date" name="DATA FINAL COBERTURA">
+</div>
+
+</div>
+
+<input type="hidden" id="relatorioVagas" name="RELATORIO_VAGAS">
+
 <button type="submit">ENVIAR</button>
 
 </form>
@@ -65,145 +204,74 @@ button { padding:10px; margin-top:10px; cursor:pointer; }
 
 <script>
 
-let count = 0;
+let i = 0;
 
-function addVaga() {
+document.getElementById('addVaga').onclick = () => {
 
-  count++;
+i++;
 
-  const container = document.getElementById('vagas');
+const t = document.getElementById('vagaTemplate');
+const c = t.cloneNode(true);
 
-  const div = document.createElement('div');
-  div.classList.add('vaga');
+c.classList.remove('hidden');
+c.removeAttribute('id');
 
-  div.innerHTML = `
+c.querySelectorAll('[id]').forEach(el => el.id += '_'+i);
+c.querySelectorAll('[name]').forEach(el => el.name += '_'+i);
 
-<h3>VAGA ${count}</h3>
+document.getElementById('containerVagas').appendChild(c);
 
-<label>POSTO</label>
-<input type="text">
+// regras
+const radios = c.querySelectorAll('input[type="radio"]');
+const sub = c.querySelector('.subnivel');
+const ferias = c.querySelector('.ferias');
 
-<label>CARGO</label>
-<input type="text">
+radios.forEach(r=>{
+r.onchange = ()=>{
+sub.classList.add('hidden');
+ferias.classList.add('hidden');
 
-<label>ESCALA</label>
-<select id="escala_${count}">
-<option></option>
-<option>12X36</option>
-<option>5X2</option>
-</select>
+if(r.value==='SUBSTITUICAO') sub.classList.remove('hidden');
+if(r.value==='COBERTURA DE FERIAS'){
+sub.classList.remove('hidden');
+ferias.classList.remove('hidden');
+}
+};
+});
 
-<label>ENTRADA</label>
-<input type="time" id="entrada_${count}">
+};
 
-<label>SAÍDA</label>
-<input type="time" id="saida_${count}">
+// RELATORIO
+function gerarRelatorio(){
 
-<label>PORTAL</label>
-<input type="checkbox" id="sim_${count}"> SIM
-<input type="checkbox" id="nao_${count}"> NÃO
+let txt='';
 
-<label>TIPO</label>
-<select onchange="tipo(this,${count})">
-<option></option>
-<option>AUMENTO DE EFETIVO</option>
-<option>COBERTURA DE FERIAS</option>
-<option>LICENCA MEDICA</option>
-<option>SUBSTITUICAO</option>
-</select>
+document.querySelectorAll('#containerVagas > div').forEach((v,k)=>{
 
-<div id="motivo_${count}" class="hidden">
-<label>MOTIVO</label>
-<input type="text">
-</div>
+txt += `VAGA ${k+1}\n`;
 
-<div id="sub_${count}" class="hidden">
-<label>NOME SUBSTITUÍDO</label>
-<input type="text">
-</div>
+v.querySelectorAll('input,select').forEach(el=>{
+if(el.value) txt += `${el.name}: ${el.value}\n`;
+});
 
-<div id="ferias_${count}" class="hidden">
-<label>INÍCIO</label>
-<input type="date">
-<label>FIM</label>
-<input type="date">
-</div>
+txt += '\n';
+});
 
-`;
-
-  container.appendChild(div);
-
-  eventos(count);
+document.getElementById('relatorioVagas').value = txt;
 }
 
-// REGRAS TIPO
-function tipo(el, i) {
+document.getElementById('formVaga').onsubmit = ()=>{
+gerarRelatorio();
+};
 
-  const sub = document.getElementById(`sub_${i}`);
-  const ferias = document.getElementById(`ferias_${i}`);
-  const motivo = document.getElementById(`motivo_${i}`);
+(function(){
+const d=new Date();
+const f=x=>x.toISOString().split('T')[0];
 
-  sub.classList.add('hidden');
-  ferias.classList.add('hidden');
-  motivo.classList.add('hidden');
+document.getElementById('protocolo').value =
+`AV-${f(d).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
 
-  if (el.value === "COBERTURA DE FERIAS") {
-    sub.classList.remove('hidden');
-    ferias.classList.remove('hidden');
-  }
-
-  else if (el.value === "SUBSTITUICAO" || el.value === "LICENCA MEDICA") {
-    sub.classList.remove('hidden');
-  }
-
-  else {
-    motivo.classList.remove('hidden');
-  }
-}
-
-// EVENTOS POR VAGA
-function eventos(i) {
-
-  const sim = document.getElementById(`sim_${i}`);
-  const nao = document.getElementById(`nao_${i}`);
-
-  sim.onchange = () => { if(sim.checked) nao.checked=false; };
-  nao.onchange = () => { if(nao.checked) sim.checked=false; };
-
-  const entrada = document.getElementById(`entrada_${i}`);
-  const saida = document.getElementById(`saida_${i}`);
-  const escala = document.getElementById(`escala_${i}`);
-
-  saida.addEventListener('change', () => {
-
-    if (!entrada.value || !saida.value) return;
-
-    const toMin = t => {
-      const [h,m]=t.split(':').map(Number);
-      return h*60+m;
-    };
-
-    let ini = toMin(entrada.value);
-    let fim = toMin(saida.value);
-
-    if (fim <= ini) fim += 1440;
-
-    if (escala.value==="12X36" && (fim-ini)<660) {
-      alert("ESCALA 12X36 ≈ 12H");
-      saida.value="";
-    }
-  });
-}
-
-// PROTOCOLO
-(function () {
-  const hoje = new Date();
-  const f = d => d.toISOString().split('T')[0];
-
-  document.getElementById('protocolo').value =
-    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
-
-  document.getElementById('dataAbertura').value = f(hoje);
+document.getElementById('dataAbertura').value=f(d);
 })();
 
 </script>
