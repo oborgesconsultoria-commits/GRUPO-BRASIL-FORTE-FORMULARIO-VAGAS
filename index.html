@@ -54,12 +54,6 @@ input, select {
   text-transform: uppercase;
 }
 
-.options label {
-  font-weight: normal;
-  display: block;
-  margin-bottom: 6px;
-}
-
 button {
   margin-top: 20px;
   width: 100%;
@@ -77,29 +71,13 @@ button {
 @media (max-width: 700px) {
   .field-row { flex-direction: column; }
 }
-
-.logo {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.logo img {
-  max-width: 260px;
-  width: 100%;
-}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
-<div class="logo">
-  <img src="assets/logoGBF.png">
-</div>
-
-<form id="formVaga"
-action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
-method="POST">
+<form id="formVaga" action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br" method="POST">
 
 <h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
 
@@ -133,18 +111,16 @@ method="POST">
 <input type="date" id="dataAbertura">
 </div>
 
-<!-- BOTÃO -->
 <button type="button" id="addVaga">+ ADICIONAR VAGA</button>
 
-<!-- CONTAINER -->
 <div id="containerVagas"></div>
 
-<!-- TEMPLATE (SEU BLOCO) -->
+<!-- TEMPLATE -->
 <div id="vagaTemplate" class="hidden">
 
 <div class="field-group">
 <label>POSTO DE TRABALHO</label>
-<input type="text" name="POSTO DE TRABALHO">
+<input type="text" name="POSTO">
 </div>
 
 <div class="field-group">
@@ -155,47 +131,75 @@ method="POST">
 <div class="field-row field-group">
 <div>
 <label>ESCALA</label>
-<select name="ESCALA" id="escala">
+<select name="ESCALA">
 <option></option>
 <option>12X36</option>
 <option>5X2</option>
+<option>6X1</option>
+<option>5X1</option>
+<option>INTERMITENTE</option>
 </select>
 </div>
+
 <div>
 <label>ENTRADA</label>
-<input type="time" id="horaEntrada">
+<input type="time" name="ENTRADA">
 </div>
+
 <div>
 <label>SAÍDA</label>
-<input type="time" id="horaSaida">
+<input type="time" name="SAIDA">
 </div>
 </div>
 
 <div class="field-group">
-<label>PORTAL</label>
-<label><input type="checkbox" id="portalSim"> SIM</label>
-<label><input type="checkbox" id="portalNao"> NÃO</label>
+<label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
+<select name="PORTAL">
+<option></option>
+<option>SIM</option>
+<option>NÃO</option>
+</select>
 </div>
 
 <div class="field-group">
-<label>TIPO</label>
-<label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="AUMENTO DE EFETIVO"> AUMENTO</label>
-<label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="COBERTURA DE FERIAS"> FÉRIAS</label>
-<label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="SUBSTITUICAO"> SUBSTITUIÇÃO</label>
+<label>TIPO DE CONTRATAÇÃO</label>
+<select class="tipo">
+<option></option>
+<option>AUMENTO DE EFETIVO</option>
+<option>COBERTURA DE FERIAS</option>
+<option>INTERMITENTE</option>
+<option>LICENCA MEDICA</option>
+<option>SUBSTITUICAO</option>
+</select>
 </div>
 
-<div class="hidden subnivel">
-<input type="text" name="NOME COLABORADOR SUBSTITUIDO" placeholder="NOME">
+<div class="motivo hidden field-group">
+<label>MOTIVO / JUSTIFICATIVA</label>
+<input type="text" name="MOTIVO">
 </div>
 
-<div class="hidden ferias">
-<input type="date" name="DATA INICIO COBERTURA">
-<input type="date" name="DATA FINAL COBERTURA">
+<div class="sub hidden field-group">
+<label>NOME DO COLABORADOR</label>
+<input type="text" name="NOME">
+
+<label>DATA INÍCIO</label>
+<input type="date" name="DATA INICIO">
+</div>
+
+<div class="ferias hidden field-group">
+<label>NOME EM FÉRIAS</label>
+<input type="text" name="NOME FERIAS">
+
+<label>INÍCIO</label>
+<input type="date" name="INICIO FERIAS">
+
+<label>FIM</label>
+<input type="date" name="FIM FERIAS">
 </div>
 
 </div>
 
-<input type="hidden" id="relatorioVagas" name="RELATORIO_VAGAS">
+<input type="hidden" id="relatorio" name="RELATORIO_VAGAS">
 
 <button type="submit">ENVIAR</button>
 
@@ -204,11 +208,11 @@ method="POST">
 
 <script>
 
-let i = 0;
+let count = 0;
 
 document.getElementById('addVaga').onclick = () => {
 
-i++;
+count++;
 
 const t = document.getElementById('vagaTemplate');
 const c = t.cloneNode(true);
@@ -216,54 +220,70 @@ const c = t.cloneNode(true);
 c.classList.remove('hidden');
 c.removeAttribute('id');
 
-c.querySelectorAll('[id]').forEach(el => el.id += '_'+i);
-c.querySelectorAll('[name]').forEach(el => el.name += '_'+i);
+// título VAGA 01
+const titulo = document.createElement('h3');
+titulo.innerText = `VAGA ${String(count).padStart(2,'0')}`;
+c.prepend(titulo);
+
+// evitar conflito
+c.querySelectorAll('[name]').forEach(el => el.name += '_' + count);
 
 document.getElementById('containerVagas').appendChild(c);
 
 // regras
-const radios = c.querySelectorAll('input[type="radio"]');
-const sub = c.querySelector('.subnivel');
+const tipo = c.querySelector('.tipo');
+const motivo = c.querySelector('.motivo');
+const sub = c.querySelector('.sub');
 const ferias = c.querySelector('.ferias');
 
-radios.forEach(r=>{
-r.onchange = ()=>{
+tipo.onchange = () => {
+
+motivo.classList.add('hidden');
 sub.classList.add('hidden');
 ferias.classList.add('hidden');
 
-if(r.value==='SUBSTITUICAO') sub.classList.remove('hidden');
-if(r.value==='COBERTURA DE FERIAS'){
+if (tipo.value === 'AUMENTO DE EFETIVO' || tipo.value === 'INTERMITENTE') {
+motivo.classList.remove('hidden');
+}
+
+if (tipo.value === 'SUBSTITUICAO' || tipo.value === 'LICENCA MEDICA') {
 sub.classList.remove('hidden');
+}
+
+if (tipo.value === 'COBERTURA DE FERIAS') {
 ferias.classList.remove('hidden');
 }
+
 };
-});
 
 };
 
 // RELATORIO
 function gerarRelatorio(){
 
-let txt='';
+let txt = '';
 
-document.querySelectorAll('#containerVagas > div').forEach((v,k)=>{
+document.querySelectorAll('#containerVagas > div').forEach((v,i)=>{
 
-txt += `VAGA ${k+1}\n`;
+txt += `====================\nVAGA ${i+1}\n====================\n`;
 
 v.querySelectorAll('input,select').forEach(el=>{
 if(el.value) txt += `${el.name}: ${el.value}\n`;
 });
 
 txt += '\n';
+
 });
 
-document.getElementById('relatorioVagas').value = txt;
+document.getElementById('relatorio').value = txt;
 }
 
+// SUBMIT
 document.getElementById('formVaga').onsubmit = ()=>{
 gerarRelatorio();
 };
 
+// protocolo
 (function(){
 const d=new Date();
 const f=x=>x.toISOString().split('T')[0];
