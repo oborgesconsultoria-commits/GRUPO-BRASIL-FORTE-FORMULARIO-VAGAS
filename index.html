@@ -87,6 +87,19 @@ button {
 </div>
 
 <div class="field-group">
+<label>EMPRESA SOLICITANTE DA VAGA</label>
+<select name="EMPRESA" id="empresaSelect" required>
+<option value="">SELECIONE</option>
+<option>AKVA MONITORAMENTO</option>
+<option>AKVA PROTECAO (HEFESTOR)</option>
+<option>AKVA TECNOLOGIA</option>
+<option>ATRIA SERVICOS</option>
+<option>BRASIL FORTE</option>
+<option>VEGA SERVICOS</option>
+</select>
+</div>
+
+<div class="field-group">
 <label>SOLICITANTE</label>
 <input type="text" name="SOLICITANTE" required>
 </div>
@@ -102,6 +115,7 @@ button {
 <button type="button" onclick="removeVaga()">- REMOVER ÚLTIMA VAGA</button>
 
 <input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_subject" id="assuntoEmail">
 
 <button type="submit">ENVIAR</button>
 
@@ -112,6 +126,30 @@ button {
 
 let vagaCount = 0;
 
+// PROTOCOLO
+(function () {
+  const hoje = new Date();
+  const f = d => d.toISOString().split('T')[0];
+
+  const protocolo = `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
+  document.getElementById('protocolo').value = protocolo;
+
+  document.getElementById('assuntoEmail').value = `FORMULÁRIO DE ABERTURA DE VAGAS - ${protocolo}`;
+})();
+
+// ASSUNTO DINÂMICO
+const empresaSelect = document.getElementById('empresaSelect');
+const assuntoEmail = document.getElementById('assuntoEmail');
+
+empresaSelect.addEventListener('change', function () {
+  const protocolo = document.getElementById('protocolo').value;
+
+  if (this.value) {
+    assuntoEmail.value = `FORMULÁRIO DE ABERTURA DE VAGAS - ${this.value} | ${protocolo}`;
+  }
+});
+
+// ADICIONAR VAGA
 function addVaga() {
   vagaCount++;
 
@@ -208,6 +246,7 @@ function addVaga() {
   container.appendChild(div);
 }
 
+// REMOVER VAGA
 function removeVaga() {
   const container = document.getElementById('vagasContainer');
 
@@ -220,6 +259,7 @@ function removeVaga() {
   vagaCount--;
 }
 
+// DINÂMICA DE TIPO
 function tipoChange(el, id) {
   const extra = document.getElementById('extra_' + id);
   extra.innerHTML = '';
@@ -271,16 +311,7 @@ function tipoChange(el, id) {
   }
 }
 
-// protocolo automático
-(function () {
-  const hoje = new Date();
-  const f = d => d.toISOString().split('T')[0];
-
-  document.getElementById('protocolo').value =
-    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
-})();
-
-// cria primeira vaga automaticamente
+// inicia com 1 vaga
 addVaga();
 
 </script>
