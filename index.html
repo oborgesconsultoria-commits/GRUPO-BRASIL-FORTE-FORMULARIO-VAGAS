@@ -77,13 +77,29 @@ button {
 @media (max-width: 700px) {
   .field-row { flex-direction: column; }
 }
+
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo img {
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
+<div class="logo">
+  <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
+</div>
+
 <form
+  id="formVaga"
   action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
   method="POST"
   enctype="multipart/form-data">
@@ -93,6 +109,11 @@ button {
 <div class="field-group">
   <label>Nº DO PROTOCOLO</label>
   <input type="text" id="protocolo" name="PROTOCOLO" readonly>
+</div>
+
+<div class="field-group">
+  <label>SOLICITANTE</label>
+  <input type="text" name="SOLICITANTE" required>
 </div>
 
 <div class="field-row field-group">
@@ -106,15 +127,9 @@ button {
   </div>
 </div>
 
-<div class="field-row field-group">
-  <div>
-    <label>SOLICITANTE</label>
-    <input type="text" name="SOLICITANTE" required>
-  </div>
-  <div>
-    <label>CARGO</label>
-    <input type="text" name="CARGO" required>
-  </div>
+<div class="field-group">
+  <label>QUANTIDADE DE VAGAS</label>
+  <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
 </div>
 
 <div class="field-group">
@@ -123,11 +138,10 @@ button {
 </div>
 
 <div class="field-group">
-  <label>QUANTIDADE DE VAGAS</label>
-  <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
+  <label>CARGO</label>
+  <input type="text" name="CARGO" required>
 </div>
 
-<!-- ESCALA + HORÁRIOS -->
 <div class="field-row field-group">
   <div>
     <label>ESCALA</label>
@@ -150,22 +164,14 @@ button {
   </div>
 </div>
 
-<!-- CHECKBOX -->
 <div class="field-group">
   <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
   <div class="options" style="display:flex; gap:30px;">
-    <label>
-      <input type="checkbox" id="portalSim" name="CADASTRAMENTO PREVIO EM PORTAL" value="SIM">
-      SIM
-    </label>
-    <label>
-      <input type="checkbox" id="portalNao" name="CADASTRAMENTO PREVIO EM PORTAL" value="NÃO">
-      NÃO
-    </label>
+    <label><input type="checkbox" id="portalSim" name="CADASTRAMENTO PREVIO EM PORTAL" value="SIM"> SIM</label>
+    <label><input type="checkbox" id="portalNao" name="CADASTRAMENTO PREVIO EM PORTAL" value="NÃO"> NÃO</label>
   </div>
 </div>
 
-<!-- TIPO DE CONTRATAÇÃO -->
 <div class="field-group">
   <label>TIPO DE CONTRATAÇÃO</label>
   <div class="options">
@@ -177,15 +183,12 @@ button {
   </div>
 </div>
 
-<!-- MOTIVO -->
 <div id="motivoGroup" class="field-group hidden">
   <label id="motivoLabel"></label>
   <input type="text" id="motivoInput" name="MOTIVO">
 </div>
 
-<!-- SUBSTITUIÇÃO / FÉRIAS -->
 <div id="subnivel" class="hidden">
-
   <div class="field-row field-group">
     <div>
       <label>NOME DO COLABORADOR SUBSTITUÍDO</label>
@@ -207,7 +210,6 @@ button {
       <input type="date" id="fimFerias" name="DATA FINAL COBERTURA">
     </div>
   </div>
-
 </div>
 
 <div class="field-group">
@@ -218,6 +220,7 @@ button {
     <label><input type="radio" name="EMPRESA" value="AKVA TECNOLOGIA"> AKVA TECNOLOGIA</label>
     <label><input type="radio" name="EMPRESA" value="ATRIA SERVICOS"> ATRIA SERVIÇOS</label>
     <label><input type="radio" name="EMPRESA" value="BRASIL FORTE"> BRASIL FORTE</label>
+    <label><input type="radio" name="EMPRESA" value="VEGA SERVICOS"> VEGA SERVIÇOS</label>
   </div>
 </div>
 
@@ -237,7 +240,12 @@ button {
 </div>
 
 <script>
-// Datas e protocolo
+document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+  el.addEventListener('input', () => {
+    el.value = el.value.toUpperCase();
+  });
+});
+
 (function () {
   const hoje = new Date();
   const min = new Date();
@@ -252,7 +260,6 @@ button {
   document.getElementById('dataPrevisao').value = f(min);
 })();
 
-// Checkbox SIM / NÃO
 const portalSim = document.getElementById('portalSim');
 const portalNao = document.getElementById('portalNao');
 
@@ -263,7 +270,13 @@ portalNao.addEventListener('change', () => {
   if (portalNao.checked) portalSim.checked = false;
 });
 
-// Tipo de contratação
+document.getElementById('formVaga').addEventListener('submit', function (e) {
+  if (!portalSim.checked && !portalNao.checked) {
+    alert('SELECIONE SIM OU NÃO EM "CADASTRAMENTO PRÉVIO EM PORTAL"');
+    e.preventDefault();
+  }
+});
+
 const radios = document.querySelectorAll('input[name="TIPO DE CONTRATAÇÃO"]');
 const sub = document.getElementById('subnivel');
 const ferias = document.getElementById('feriasDatas');
@@ -306,7 +319,6 @@ radios.forEach(r => {
   });
 });
 
-// Validação 12x36
 const entrada = document.getElementById('horaEntrada');
 const saida = document.getElementById('horaSaida');
 const escala = document.getElementById('escala');
@@ -329,9 +341,23 @@ saida.addEventListener('change', () => {
   }
 });
 
-// Datas férias
+/* >>> ÚNICA ALTERAÇÃO <<< */
+ini.addEventListener('change', () => {
+  if (ini.value) {
+    fim.min = ini.value;
+    fim.value = '';
+  }
+});
+
 fim.addEventListener('change', () => {
-  if (fim.value && ini.value && fim.value <= ini.value) {
+  if (!ini.value || !fim.value) return;
+
+  if (fim.value.length !== 10) return;
+
+  const dataIni = new Date(ini.value);
+  const dataFim = new Date(fim.value);
+
+  if (dataFim <= dataIni) {
     alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
     fim.value = '';
   }
