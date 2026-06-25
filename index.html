@@ -2,366 +2,206 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>FORMULÁRIO DE ABERTURA DE VAGA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo Brasil Forte | Sistema Atualizado</title>
 
 <style>
-body {
-  margin: 0;
-  padding: 0;
-  background: #f2f4f7;
-  font-family: Arial, Helvetica, sans-serif;
-  text-transform: uppercase;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
-.wrapper {
-  max-width: 900px;
-  margin: 40px auto;
-  background: #ffffff;
-  padding: 30px 40px;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+body{
+    background: linear-gradient(135deg, #003366 0%, #001933 100%);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    padding:20px;
 }
 
-h1 {
-  font-size: 22px;
-  margin-bottom: 25px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
+.container{
+    background:#ffffff;
+    color:#333;
+    max-width:800px;
+    width:100%;
+    padding:50px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+    animation:fadeIn 1s ease;
 }
 
-.field-group { margin-bottom: 18px; }
-
-.field-row {
-  display: flex;
-  gap: 15px;
+.logo img{
+    max-width:300px;
+    width:100%;
+    margin-bottom:30px;
 }
 
-.field-row > div { flex: 1; }
-
-label {
-  display: block;
-  font-size: 13px;
-  font-weight: bold;
-  margin-bottom: 5px;
+.icon{
+    font-size:70px;
+    margin-bottom:20px;
 }
 
-input, select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  text-transform: uppercase;
+h1{
+    color:#003366;
+    font-size:38px;
+    margin-bottom:20px;
 }
 
-.options label {
-  font-weight: normal;
-  display: block;
-  margin-bottom: 6px;
+.subtitle{
+    font-size:22px;
+    color:#C00000;
+    font-weight:bold;
+    margin-bottom:25px;
 }
 
-button {
-  margin-top: 30px;
-  width: 100%;
-  padding: 12px;
-  background: #005baa;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
+.message{
+    font-size:18px;
+    line-height:1.8;
+    margin-bottom:35px;
 }
 
-.hidden { display: none; }
-
-@media (max-width: 700px) {
-  .field-row { flex-direction: column; }
+.btn{
+    display:inline-block;
+    background:#C00000;
+    color:#fff;
+    text-decoration:none;
+    padding:18px 40px;
+    border-radius:50px;
+    font-size:18px;
+    font-weight:bold;
+    transition:.3s;
 }
 
-.logo {
-  text-align: center;
-  margin-bottom: 20px;
+.btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(192,0,0,.4);
 }
 
-.logo img {
-  max-width: 260px;
-  width: 100%;
-  height: auto;
+.countdown{
+    margin-top:30px;
+    font-size:17px;
+    color:#555;
+}
+
+.timer{
+    color:#C00000;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.footer{
+    margin-top:40px;
+    padding-top:20px;
+    border-top:1px solid #ddd;
+    font-size:14px;
+    color:#777;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:768px){
+
+    .container{
+        padding:35px 25px;
+    }
+
+    h1{
+        font-size:28px;
+    }
+
+    .subtitle{
+        font-size:18px;
+    }
+
+    .message{
+        font-size:16px;
+    }
+
+    .btn{
+        width:100%;
+    }
 }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
 
-<div class="logo">
-  <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
-</div>
+<div class="container">
 
-<form
-  id="formVaga"
-  action="https://formsubmit.co/mayara.dantas@grupobrasilforte.com.br"
-  method="POST"
-  enctype="multipart/form-data">
-
-<h1>FORMULÁRIO DE ABERTURA DE VAGA</h1>
-
-<div class="field-group">
-  <label>Nº DO PROTOCOLO</label>
-  <input type="text" id="protocolo" name="PROTOCOLO" readonly>
-</div>
-
-<div class="field-group">
-  <label>SOLICITANTE</label>
-  <input type="text" name="SOLICITANTE" required>
-</div>
-
-<div class="field-row field-group">
-  <div>
-    <label>DATA DA ABERTURA</label>
-    <input type="date" id="dataAbertura" name="DATA DA ABERTURA" required>
-  </div>
-  <div>
-    <label>DATA PREVISTA DE INÍCIO</label>
-    <input type="date" id="dataPrevisao" name="DATA PREVISTA DE INICIO" required>
-  </div>
-</div>
-
-<div class="field-group">
-  <label>QUANTIDADE DE VAGAS</label>
-  <input type="number" name="QUANTIDADE DE VAGAS" min="1" required>
-</div>
-
-<div class="field-group">
-  <label>POSTO DE TRABALHO</label>
-  <input type="text" name="POSTO DE TRABALHO" required>
-</div>
-
-<div class="field-group">
-  <label>CARGO</label>
-  <input type="text" name="CARGO" required>
-</div>
-
-<div class="field-row field-group">
-  <div>
-    <label>ESCALA</label>
-    <select name="ESCALA" id="escala" required>
-      <option value="">SELECIONE</option>
-      <option value="12X36">12X36</option>
-      <option value="5X2">5X2</option>
-      <option value="6X1">6X1</option>
-      <option value="5X1">5X1</option>
-      <option value="INTERMITENTE">INTERMITENTE</option>
-    </select>
-  </div>
-  <div>
-    <label>HORÁRIO – ENTRADA</label>
-    <input type="time" id="horaEntrada" name="HORARIO ENTRADA" required>
-  </div>
-  <div>
-    <label>HORÁRIO – SAÍDA</label>
-    <input type="time" id="horaSaida" name="HORARIO SAIDA" required>
-  </div>
-</div>
-
-<div class="field-group">
-  <label>CADASTRAMENTO PRÉVIO EM PORTAL</label>
-  <div class="options" style="display:flex; gap:30px;">
-    <label><input type="checkbox" id="portalSim" name="CADASTRAMENTO PREVIO EM PORTAL" value="SIM"> SIM</label>
-    <label><input type="checkbox" id="portalNao" name="CADASTRAMENTO PREVIO EM PORTAL" value="NÃO"> NÃO</label>
-  </div>
-</div>
-
-<div class="field-group">
-  <label>TIPO DE CONTRATAÇÃO</label>
-  <div class="options">
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="AUMENTO DE EFETIVO" required> AUMENTO DE EFETIVO</label>
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="COBERTURA DE FERIAS"> COBERTURA DE FÉRIAS</label>
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="INTERMITENTE"> INTERMITENTE</label>
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="LICENCA MEDICA"> LICENÇA MÉDICA</label>
-    <label><input type="radio" name="TIPO DE CONTRATAÇÃO" value="SUBSTITUICAO"> SUBSTITUIÇÃO</label>
-  </div>
-</div>
-
-<div id="motivoGroup" class="field-group hidden">
-  <label id="motivoLabel"></label>
-  <input type="text" id="motivoInput" name="MOTIVO">
-</div>
-
-<div id="subnivel" class="hidden">
-  <div class="field-row field-group">
-    <div>
-      <label>NOME DO COLABORADOR SUBSTITUÍDO</label>
-      <input type="text" id="nomeSub" name="NOME COLABORADOR SUBSTITUIDO">
+    <div class="logo">
+        <!-- Troque pelo caminho correto do logo -->
+        <img src="assets/logoGBF.png" alt="Grupo Brasil Forte">
     </div>
-    <div>
-      <label>MATRÍCULA DO COLABORADOR SUBSTITUÍDO</label>
-      <input type="text" id="matSub" name="MATRICULA COLABORADOR SUBSTITUIDO">
+
+    <div class="icon">🚀</div>
+
+    <h1>Sistema Atualizado</h1>
+
+    <div class="subtitle">
+        Estamos de mudança!
     </div>
-  </div>
 
-  <div id="feriasDatas" class="field-row field-group hidden">
-    <div>
-      <label>DATA INÍCIO COBERTURA</label>
-      <input type="date" id="iniFerias" name="DATA INICIO COBERTURA">
+    <div class="message">
+        Esta plataforma foi descontinuada e substituída por uma nova versão,
+        desenvolvida para oferecer maior desempenho, segurança e novas funcionalidades.
+        <br><br>
+        Clique no botão abaixo para acessar a nova plataforma.
     </div>
-    <div>
-      <label>DATA FINAL COBERTURA</label>
-      <input type="date" id="fimFerias" name="DATA FINAL COBERTURA">
+
+    <a
+        class="btn"
+        href="https://NOVO-LINK-AQUI"
+        target="_blank">
+        ACESSAR NOVA PLATAFORMA
+    </a>
+
+    <div class="countdown">
+        Você será redirecionado automaticamente em
+        <span class="timer" id="contador">10</span>
+        segundos.
     </div>
-  </div>
-</div>
 
-<div class="field-group">
-  <label>EMPRESA</label>
-  <div class="options">
-    <label><input type="radio" name="EMPRESA" value="AKVA MONITORAMENTO" required> AKVA MONITORAMENTO</label>
-    <label><input type="radio" name="EMPRESA" value="AKVA PROTECAO (HEFESTOR)"> AKVA PROTEÇÃO (HEFESTOR)</label>
-    <label><input type="radio" name="EMPRESA" value="AKVA TECNOLOGIA"> AKVA TECNOLOGIA</label>
-    <label><input type="radio" name="EMPRESA" value="ATRIA SERVICOS"> ATRIA SERVIÇOS</label>
-    <label><input type="radio" name="EMPRESA" value="BRASIL FORTE"> BRASIL FORTE</label>
-    <label><input type="radio" name="EMPRESA" value="VEGA SERVICOS"> VEGA SERVIÇOS</label>
-  </div>
-</div>
+    <div class="footer">
+        Grupo Brasil Forte<br>
+        Tecnologia e Inovação a Serviço da Excelência Operacional
+    </div>
 
-<div class="field-group">
-  <label>ANEXAR CURRÍCULOS (SE HOUVER)</label>
-  <input type="file" name="CURRICULOS">
-</div>
-
-<input type="hidden" name="_cc" value="allan.borges@grupobrasilforte.com.br,maria.fernanda@grupobrasilforte.com.br">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_subject" id="assuntoEmail">
-
-<button type="submit">ENVIAR SOLICITAÇÃO</button>
-
-</form>
 </div>
 
 <script>
-document.querySelectorAll('input[type="text"], textarea').forEach(el => {
-  el.addEventListener('input', () => {
-    el.value = el.value.toUpperCase();
-  });
-});
 
-(function () {
-  const hoje = new Date();
-  const min = new Date();
-  min.setDate(hoje.getDate() + 5);
-  const f = d => d.toISOString().split('T')[0];
+const novoLink = "https://gestaooperacionalbrasilforte.base44.app/";
 
-  document.getElementById('protocolo').value =
-    `AV-${f(hoje).replaceAll('-','')}-${Date.now().toString().slice(-4)}`;
+let tempo = 10;
 
-  document.getElementById('dataAbertura').value = f(hoje);
-  document.getElementById('dataPrevisao').min = f(min);
-  document.getElementById('dataPrevisao').value = f(min);
-})();
+const contador = document.getElementById("contador");
 
-const portalSim = document.getElementById('portalSim');
-const portalNao = document.getElementById('portalNao');
+const intervalo = setInterval(() => {
 
-portalSim.addEventListener('change', () => {
-  if (portalSim.checked) portalNao.checked = false;
-});
-portalNao.addEventListener('change', () => {
-  if (portalNao.checked) portalSim.checked = false;
-});
+    tempo--;
+    contador.textContent = tempo;
 
-document.getElementById('formVaga').addEventListener('submit', function (e) {
-  if (!portalSim.checked && !portalNao.checked) {
-    alert('SELECIONE SIM OU NÃO EM "CADASTRAMENTO PRÉVIO EM PORTAL"');
-    e.preventDefault();
-  }
-});
-
-const radios = document.querySelectorAll('input[name="TIPO DE CONTRATAÇÃO"]');
-const sub = document.getElementById('subnivel');
-const ferias = document.getElementById('feriasDatas');
-const nome = document.getElementById('nomeSub');
-const mat = document.getElementById('matSub');
-const ini = document.getElementById('iniFerias');
-const fim = document.getElementById('fimFerias');
-const assunto = document.getElementById('assuntoEmail');
-const motivoGroup = document.getElementById('motivoGroup');
-const motivoLabel = document.getElementById('motivoLabel');
-const motivoInput = document.getElementById('motivoInput');
-
-radios.forEach(r => {
-  r.addEventListener('change', () => {
-    sub.classList.add('hidden');
-    ferias.classList.add('hidden');
-    motivoGroup.classList.add('hidden');
-    motivoInput.required = false;
-    nome.required = mat.required = false;
-    ini.required = false;
-
-    assunto.value = `ABERTURA DE VAGA – ${r.value}`;
-
-    if (!['COBERTURA DE FERIAS','LICENCA MEDICA'].includes(r.value)) {
-      motivoGroup.classList.remove('hidden');
-      motivoInput.required = true;
-      const prep = r.value.endsWith('AO') ? 'DA' : 'DO';
-      motivoLabel.innerText = `MOTIVO ${prep} ${r.value}`;
+    if(tempo <= 0){
+        clearInterval(intervalo);
+        window.location.href = novoLink;
     }
 
-    if (['SUBSTITUICAO','COBERTURA DE FERIAS','LICENCA MEDICA'].includes(r.value)) {
-      sub.classList.remove('hidden');
-      nome.required = mat.required = true;
-    }
+}, 1000);
 
-    if (r.value === 'COBERTURA DE FERIAS') {
-      ferias.classList.remove('hidden');
-      ini.required = true;
-    }
-  });
-});
-
-const entrada = document.getElementById('horaEntrada');
-const saida = document.getElementById('horaSaida');
-const escala = document.getElementById('escala');
-
-saida.addEventListener('change', () => {
-  if (!entrada.value || !saida.value) return;
-
-  const toMinutes = t => {
-    const [h, m] = t.split(':').map(Number);
-    return h * 60 + m;
-  };
-
-  let iniMin = toMinutes(entrada.value);
-  let fimMin = toMinutes(saida.value);
-  if (fimMin <= iniMin) fimMin += 1440;
-
-  if (escala.value === '12X36' && (fimMin - iniMin) < 11 * 60) {
-    alert('ESCALA 12X36 DEVE TER APROXIMADAMENTE 12 HORAS');
-    saida.value = '';
-  }
-});
-
-/* >>> ÚNICA ALTERAÇÃO <<< */
-ini.addEventListener('change', () => {
-  if (ini.value) {
-    fim.min = ini.value;
-    fim.value = '';
-  }
-});
-
-fim.addEventListener('change', () => {
-  if (!ini.value || !fim.value) return;
-
-  if (fim.value.length !== 10) return;
-
-  const dataIni = new Date(ini.value);
-  const dataFim = new Date(fim.value);
-
-  if (dataFim <= dataIni) {
-    alert('A DATA FINAL DEVE SER MAIOR QUE A DATA INICIAL');
-    fim.value = '';
-  }
-});
 </script>
 
 </body>
